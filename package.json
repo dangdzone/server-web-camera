@@ -20,11 +20,19 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@livequery/mongodb-mapper": "^1.0.80",
+    "@livequery/nestjs": "^1.0.80",
+    "@livequery/typeorm": "^1.0.86",
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/platform-ws": "^10.2.7",
+    "@nestjs/typeorm": "^10.0.0",
+    "firebase-admin": "^11.11.0",
+    "mongodb": "^6.1.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "typeorm": "^0.3.17"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
