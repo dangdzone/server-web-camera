@@ -17,9 +17,6 @@ export class Food extends BaseEntity {
     images: string // Ảnh
 
     @Column()
-    menu_id: string // Menu
-
-    @Column()
     description: string // Miêu tả
 
     @Column()

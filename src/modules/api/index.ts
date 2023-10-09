@@ -10,12 +10,16 @@ import { MongoDBRealtimeProvider, TypeormDatasourceProvider } from "./decoraters
 import { FoodRestaurantController } from "./controllers/foods.js";
 import { TypeormConfigModule } from "../../config/TypeormConfigModule.js";
 import { RestaurantController } from "./controllers/restaurants.js";
+import { TableController } from "./controllers/tables.js";
+import { CategoryController } from "./controllers/categories.js";
 
 @Module({
     imports: [TypeormConfigModule],
     controllers: [
         RestaurantController,
         FoodRestaurantController,
+        TableController,
+        CategoryController,
     ],
     providers: [
         LivequeryInterceptor,
