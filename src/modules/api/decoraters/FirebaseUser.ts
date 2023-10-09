@@ -1,6 +1,6 @@
 // Lấy user từ request của người dùng
 import { createParamDecorator, ExecutionContext } from "@nestjs/common"
-import { UserInfo } from "firebase-admin/lib/auth/user-record"
+import { UserInfo } from "firebase-admin/auth"
 
 export type FirebaseUser = UserInfo & { $: any }
 export const FirebaseUser = createParamDecorator(

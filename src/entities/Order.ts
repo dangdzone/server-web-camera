@@ -1,7 +1,7 @@
 
 import { Column, Entity } from "typeorm"
-import { BaseEntity } from "./BaseEntity"
 import { ObjectId } from "mongodb"
+import { BaseEntity } from "./BaseEntity.js"
 
 @Entity('orders') // Đơn hàng
 export class Order extends BaseEntity {

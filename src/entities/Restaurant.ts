@@ -1,5 +1,5 @@
 import { Column, Entity } from "typeorm"
-import { BaseEntity } from "./BaseEntity"
+import { BaseEntity } from "./BaseEntity.js"
 
 @Entity('restaurants') // Nhà hàng
 export class Restaurant extends BaseEntity {
@@ -14,6 +14,6 @@ export class Restaurant extends BaseEntity {
     phone: string // Số điện thoại cửa hàng 
 
     @Column()
-    status: string = 'opening' // Trạng thái hoạt động 
+    status: string = 'active' // Trạng thái hoạt động 
 
 }

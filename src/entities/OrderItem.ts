@@ -1,5 +1,5 @@
 import { Column, Entity } from "typeorm"
-import { BaseEntity } from "./BaseEntity"
+import { BaseEntity } from "./BaseEntity.js"
 
 @Entity('order-items') // Món trong đơn hàng
 export class OrderItem extends BaseEntity {

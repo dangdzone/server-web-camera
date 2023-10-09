@@ -1,12 +1,13 @@
+
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { Category } from "../entities/Category";
-import { Food } from "../entities/Food";
-import { Order } from "../entities/Order";
-import { OrderItem } from "../entities/OrderItem";
-import { Restaurant } from "../entities/Restaurant";
-import { RestaurantTable } from "../entities/RestaurantTable";
-import { MongoConnectionOptions } from "typeorm/driver/mongodb/MongoConnectionOptions";
+import { MongoConnectionOptions } from "typeorm/driver/mongodb/MongoConnectionOptions.js";
+import { Food } from "../entities/Food.js";
+import { Restaurant } from "../entities/Restaurant.js";
+import { Order } from "../entities/Order.js";
+import { Category } from "../entities/Category.js";
+import { OrderItem } from "../entities/OrderItem.js";
+import { RestaurantTable } from "../entities/RestaurantTable.js";
 
 export const entities = [
     Order,
@@ -18,10 +19,10 @@ export const entities = [
 ]
 
 export const MongoConnectionInfo: MongoConnectionOptions = {
-    url: process.env.MONGODB_URL,
+    url: process.env.DB_URL,
     entities,
     type: 'mongodb',
-    database: process.env.MONGODB_DB,
+    database: process.env.DB_NAME,
     synchronize: true
 }
 

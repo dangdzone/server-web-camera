@@ -1,9 +1,9 @@
+
 import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MongoRepository, ObjectID, Repository } from 'typeorm';
-import { UseTypeormDatasource } from '@livequery/typeorm'
-import { Food } from '../../../entities/Food';
-import { ObjectId } from "mongodb"
+import { MongoRepository } from 'typeorm';
+import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
+import { Food } from '../../../entities/Food.js';
 
 
 @Controller('livequery/restaurants/:restaurant_id/foods') // Món ăn

@@ -1,21 +1,21 @@
 import { Column, ObjectIdColumn } from "typeorm"
 
+export type PermissionList = string
+
+export type UserPermissions = {
+    [user_uid: string]: PermissionList
+}
+
 export class BaseEntity {
 
-    constructor() { // 
-        this.created_at = Date.now()
-    }
-
+    @ObjectIdColumn({ name: '_id' })
     id: string
-
-    @ObjectIdColumn() // decorator
-    _id: string
 
     @Column()
     created_at: number // Thời gian tạo
 
     @Column()
-    updated_at: number // Cập nhật
+    updated_at?: number = Date.now() // Cập nhật
 
     @Column({ nullable: true })
     owner_id: string // id Chủ chuỗi cửa hàng 

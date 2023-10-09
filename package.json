@@ -5,19 +5,11 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "type": "module",
   "scripts": {
-    "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "dev": "clear; env-cmd --file dev.env node --no-warnings --es-module-specifier-resolution=node --experimental-specifier-resolution=node --loader ts-node/esm ",
+    "build": "tsc -v; rm -rf build && tsc -b tsconfig.json && yarn generate:types",
+    "generate:types": " cat build/src/entities/*.d.ts > types.ts &&  sed -i -E \"s/import.+//\" types.ts"
   },
   "dependencies": {
     "@livequery/mongodb-mapper": "^1.0.80",
@@ -28,6 +20,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/platform-ws": "^10.2.7",
     "@nestjs/typeorm": "^10.0.0",
+    "@nestjs/websockets": "^10.2.7",
     "firebase-admin": "^11.11.0",
     "mongodb": "^6.1.0",
     "reflect-metadata": "^0.1.13",

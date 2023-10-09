@@ -1,34 +1,27 @@
+
+
 import { Module } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
-import { LivequeryInterceptor, LivequeryWebsocketSync } from '@livequery/nestjs';
-import { TypeormDatasource } from '@livequery/typeorm';
-import { MongodbRealtimeMapperProvider } from '@livequery/mongodb-mapper';
 import { WsAdapter } from '@nestjs/platform-ws'
 import BodyParser from "body-parser";
 import admin from "firebase-admin"
-import { MongoConnectionInfo, TypeormConfigModule } from "src/config/TypeormConfigModule";
+import { LivequeryInterceptor, LivequeryWebsocketSync } from "@livequery/nestjs";
+import { MongoDBRealtimeProvider, TypeormDatasourceProvider } from "./decoraters/UseTypeormDatasource.js";
+import { FoodRestaurantController } from "./controllers/foods.js";
+import { TypeormConfigModule } from "../../config/TypeormConfigModule.js";
+import { RestaurantController } from "./controllers/restaurants.js";
 
 @Module({
     imports: [TypeormConfigModule],
     controllers: [
-        // AreaController,
-        // CategoryController,
-        // NotificationController,
-        // FoodRestaurantController,
-        // OrderItemController,
-        // OrderController,
-        // ReportController,
-        // OrderItemManagerController,
-        // RestaurantController,
-        // TableController,
-        // ServingAreaController,
-        // StaffController,
+        RestaurantController,
+        FoodRestaurantController,
     ],
     providers: [
         LivequeryInterceptor,
         LivequeryWebsocketSync,
-        TypeormDatasource,
-        MongodbRealtimeMapperProvider([MongoConnectionInfo])
+        MongoDBRealtimeProvider,
+        TypeormDatasourceProvider,
     ]
 })
 export class ApiModule { }
@@ -39,7 +32,7 @@ admin.initializeApp({
 
 // Khởi tạo backend
 const app = await NestFactory.create(ApiModule)
-app.useWebSocketAdapter(new WsAdapter(app));
+app.useWebSocketAdapter(new WsAdapter(app) as any)
 app.enableCors()
 app.use(BodyParser.json({ limit: "100mb" }))
 const PORT = Number(process.env.API_PORT || 80)
