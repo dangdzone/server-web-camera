@@ -13,7 +13,7 @@ export class Order extends BaseEntity {
     restaurant_id: string // Id nhà hàng
 
     @Column()
-    create_name: string = 'Khách hàng' // Người tạo 
+    customer_name: string = 'Khách hàng' // Người tạo 
 
     @Column()
     table_id: string // ID bàn đang sử dụng
@@ -24,4 +24,6 @@ export class Order extends BaseEntity {
     @Column()
     total: number = 0 // Tổng tiền
 
+    @Column()
+    food_amount: number = 0 // Số lượng món
 }

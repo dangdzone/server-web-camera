@@ -22,4 +22,7 @@ export class Food extends BaseEntity {
     @Column()
     price: number // Giá bán
 
+    @Column()
+    amount: number // Số lượng
+
 }

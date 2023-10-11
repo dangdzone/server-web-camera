@@ -12,6 +12,8 @@ import { TypeormConfigModule } from "../../config/TypeormConfigModule.js";
 import { RestaurantController } from "./controllers/restaurants.js";
 import { TableController } from "./controllers/tables.js";
 import { CategoryController } from "./controllers/categories.js";
+import { OrderController } from "./controllers/orders.js";
+import { OrderItemController } from "./controllers/order-items.js";
 
 @Module({
     imports: [TypeormConfigModule],
@@ -20,6 +22,8 @@ import { CategoryController } from "./controllers/categories.js";
         FoodRestaurantController,
         TableController,
         CategoryController,
+        OrderController,
+        OrderItemController
     ],
     providers: [
         LivequeryInterceptor,
