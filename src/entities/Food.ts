@@ -25,4 +25,7 @@ export class Food extends BaseEntity {
     @Column()
     amount: number // Số lượng
 
+    @Column()
+    status: string = 'active' // Trạng thái món ăn
+
 }

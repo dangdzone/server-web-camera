@@ -26,9 +26,9 @@ export class OrderItemController {
 
     @Post()
     async post(
-        @Body() body: Food, // Thông tin món khách hàng yêu cầu
+        @Body() body: OrderItem, // Thông tin món khách hàng yêu cầu
         @Param('order_id') order_id: string
-    ) { 
+    ) {
 
         // Lấy thông tin của món ăn từ CSDL === id món khách hàng
         const food = await this.FoodCollection.findOne(
@@ -39,27 +39,21 @@ export class OrderItemController {
         if (!food) { throw { code: 'FOOD_NOT_FOUND' } }
 
         // Lấy thông tin của đơn hàng trong CSDL
-        const order = await this.OrderCollection.findOne(
+        const order_info = await this.OrderCollection.findOne(
             { where: { _id: new ObjectId(order_id) } }
         )
 
-        console.log({ order })
-
         // Chek bàn có còn trong CSDL không
-        if (!order) { throw { code: 'ORDER_NOT_FOUND' } }
+        if (!order_info) { throw { code: 'ORDER_NOT_FOUND' } }
 
-         // Lưu thông tin món vào Order-Item
-         await this.OrderItemCollection.save({
+        // Lưu thông tin món vào Order-Item
+        const created_order_item = await this.OrderItemCollection.save({
             ...new OrderItem(),
-            restaurant_id: food.restaurant_id,
-            name: food.name,
-            image: food.images.split(`\n`)[0],
+            ...body,
             price: food.price,
-            table_id: order.table_id,
-            creator_id: `Chưa lấy được`,
-            creator_name: `Chưa lấy được`,
             order_id,
-            // food_id: food.food_id,
+            food_id: food.id,
+            restaurant_id: food.restaurant_id
         } as OrderItem)
 
         // Update đơn hàng 
@@ -71,6 +65,12 @@ export class OrderItemController {
                 }
             }
         )
+
+        return {
+            data: {
+                item: created_order_item
+            }
+        }
     }
 
     @Patch(':id')
