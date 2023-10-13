@@ -29,7 +29,7 @@ export const MongoDBRealtimeProvider: Provider = {
             url: process.env.DB_URL
         })
             .pipe(
-                tds.pipe2websocket(), 
+                tds.pipe2websocket(),
                 ws.pipe2websocket()
             )
             .subscribe()

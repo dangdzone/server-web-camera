@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "dev": "clear; env-cmd --file dev.env node --no-warnings --es-module-specifier-resolution=node --experimental-specifier-resolution=node --loader ts-node/esm ",
-    "build": "tsc -v; rm -rf build && tsc -b tsconfig.json && yarn generate:types",
+    "build": "tsc -v; rm -rf build && tsc -b tsconfig.json",
     "generate:types": " cat build/src/entities/*.d.ts > types.ts &&  sed -i -E \"s/import.+//\" types.ts"
   },
   "dependencies": {
