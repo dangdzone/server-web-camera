@@ -8,6 +8,10 @@ export type UserPermissions = {
 
 export class BaseEntity {
 
+    constructor() { // Thời gian tạo
+        this.created_at = Date.now()
+    }
+
     @ObjectIdColumn({ name: '_id' })
     id: string
 
