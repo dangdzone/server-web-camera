@@ -12,14 +12,14 @@ export class BaseEntity {
         this.created_at = Date.now()
     }
 
-    @ObjectIdColumn({ name: '_id' })
+    @ObjectIdColumn({ name: '_id' }) // id tạo
     id: string
 
     @Column()
     created_at: number // Thời gian tạo
 
     @Column()
-    updated_at?: number = Date.now() // Cập nhật
+    updated_at: number // Cập nhật
 
     @Column({ nullable: true })
     owner_id: string // id Chủ chuỗi cửa hàng 

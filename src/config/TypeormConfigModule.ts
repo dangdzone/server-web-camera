@@ -18,6 +18,7 @@ export const entities = [
     RestaurantTable,
 ]
 
+// Kết nối database
 export const MongoConnectionInfo: MongoConnectionOptions = {
     url: process.env.DB_URL,
     entities,
