@@ -19,7 +19,10 @@ export class Order extends BaseEntity {
     table_id: string // ID bàn đang sử dụng
 
     @Column()
-    status: string = 'unpaid' // Trạng thái đơn hàng 
+    status: string = 'unpaid' // Trạng thái đơn hàng
+
+    @Column()
+    status_detail: number // Trạng thái từng món
 
     @Column()
     total: number = 0 // Tổng tiền
