@@ -27,9 +27,10 @@ export class OrderController {
     @UseTypeormDatasource({ entity: Order, realtime: true })
     async patch(
         @Body('status') status: string,
-        @Param('restaurant_id') restaurant_id: string
+        @Param('restaurant_id') restaurant_id: string,
     ) {
         // status == 'paid' && this.ReportService.generate_restaurant_orders_report(restaurant_id)
+        
     }
 
     @Get(['tables/:table_id/orders', 'tables/:table_id/orders/:id']) // Lấy đơn hàng theo bàn
