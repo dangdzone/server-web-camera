@@ -12,7 +12,7 @@
     "generate:types": " cat build/src/entities/*.d.ts > types.ts &&  sed -i -E \"s/import.+//\" types.ts"
   },
   "dependencies": {
-    "@livequery/mongodb-mapper": "^1.0.80",
+    "@livequery/mongodb-mapper": "^1.0.81",
     "@livequery/nestjs": "^1.0.80",
     "@livequery/typeorm": "^1.0.86",
     "@nestjs/common": "^10.0.0",

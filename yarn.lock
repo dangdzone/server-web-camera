@@ -833,10 +833,10 @@
   dependencies:
     lodash "^4.17.21"
 
-"@livequery/mongodb-mapper@^1.0.80":
-  version "1.0.80"
-  resolved "https://registry.yarnpkg.com/@livequery/mongodb-mapper/-/mongodb-mapper-1.0.80.tgz#8c851d5331624048750a5df616ddeab61025afff"
-  integrity sha512-sN053UvLpHRlh/G3iRdIRXyLAU+vfi2NHK7+jkT1pCDp/eHR/X5TJQbfojfHUfMLuHQX8LKfFpd6uFokN2j3VQ==
+"@livequery/mongodb-mapper@^1.0.81":
+  version "1.0.81"
+  resolved "https://registry.yarnpkg.com/@livequery/mongodb-mapper/-/mongodb-mapper-1.0.81.tgz#eff17f206a6007f8cab907bde506f191108022e9"
+  integrity sha512-ZpvaYkEluJlRctMZ4MC3jgbdGgoIPEAdz+itCsxieT5HDrZRtBtEXUjgGD4CItjpeCYi0XR9TLA+0/5Ieq1jnw==
 
 "@livequery/nestjs@^1.0.80":
   version "1.0.80"
