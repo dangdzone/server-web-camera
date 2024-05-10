@@ -6,7 +6,7 @@ import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Category } from '../../../entities/Category.js';
 
 
-@Controller('livequery/restaurants/:restaurant_id/categories') // Món ăn
+@Controller('livequery/categories') // Danh mục
 export class CategoryController {
 
     // Hàm khởi tạo, tạo các biến để thao tác với DB

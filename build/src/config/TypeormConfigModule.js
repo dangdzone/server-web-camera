@@ -6,19 +6,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { Food } from "../entities/Food.js";
-import { Restaurant } from "../entities/Restaurant.js";
-import { Order } from "../entities/Order.js";
 import { Category } from "../entities/Category.js";
-import { OrderItem } from "../entities/OrderItem.js";
-import { RestaurantTable } from "../entities/RestaurantTable.js";
 export const entities = [
-    Order,
     Category,
-    Food,
-    OrderItem,
-    Restaurant,
-    RestaurantTable,
 ];
 export const MongoConnectionInfo = {
     url: process.env.DB_URL,

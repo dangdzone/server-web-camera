@@ -1,16 +1,16 @@
 import { Column, Entity } from "typeorm"
 import { BaseEntity } from "./BaseEntity.js"
 
-@Entity('categories') // Danh mục món ăn
+@Entity('categories') // Danh mục camera
 export class Category extends BaseEntity {
+    
+    @Column()
+    name: string // Tên danh mục
 
     @Column()
-    restaurant_id: string // Id nhà hàng
+    image: string // Ảnh
 
     @Column()
-    menu_id: string // Menu
-
-    @Column()
-    name: string // Tên danh mục món 
+    href: string // Đường dẫn
 
 }

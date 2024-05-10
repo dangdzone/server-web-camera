@@ -7,7 +7,6 @@ export declare class BaseEntity {
     id: string;
     created_at: number;
     updated_at: number;
-    owner_id: string;
     permissions: {
         [permission: string]: string;
     };

@@ -3,7 +3,6 @@ import { listenMongoDBDataChange } from '@livequery/mongodb-mapper'
 import { RouteOptions, TypeormDatasource } from '@livequery/typeorm'
 import { Provider } from '@nestjs/common'
 import { getDataSourceToken } from '@nestjs/typeorm'
-import { tap } from 'rxjs'
 import { DataSource } from 'typeorm'
 
 const [

@@ -22,9 +22,6 @@ export class BaseEntity {
     updated_at: number // Cập nhật
 
     @Column({ nullable: true })
-    owner_id: string // id Chủ chuỗi cửa hàng 
-
-    @Column({ nullable: true })
     permissions: {
         [permission: string]: string // Tất cả quyền  
     }

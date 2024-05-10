@@ -15,7 +15,6 @@ export class BaseEntity {
     id;
     created_at;
     updated_at;
-    owner_id;
     permissions;
 }
 __decorate([
@@ -30,10 +29,6 @@ __decorate([
     Column(),
     __metadata("design:type", Number)
 ], BaseEntity.prototype, "updated_at", void 0);
-__decorate([
-    Column({ nullable: true }),
-    __metadata("design:type", String)
-], BaseEntity.prototype, "owner_id", void 0);
 __decorate([
     Column({ nullable: true }),
     __metadata("design:type", Object)

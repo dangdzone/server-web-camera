@@ -54,7 +54,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], CategoryController.prototype, "del", null);
 CategoryController = __decorate([
-    Controller('livequery/restaurants/:restaurant_id/categories'),
+    Controller('livequery/categories'),
     __param(0, InjectRepository(Category)),
     __metadata("design:paramtypes", [MongoRepository])
 ], CategoryController);

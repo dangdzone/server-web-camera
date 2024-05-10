@@ -6,23 +6,13 @@ import BodyParser from "body-parser";
 import admin from "firebase-admin"
 import { LivequeryInterceptor, LivequeryWebsocketSync } from "@livequery/nestjs";
 import { MongoDBRealtimeProvider, TypeormDatasourceProvider } from "./decoraters/UseTypeormDatasource.js";
-import { FoodRestaurantController } from "./controllers/foods.js";
-import { TypeormConfigModule } from "../../config/TypeormConfigModule.js";
-import { RestaurantController } from "./controllers/restaurants.js";
-import { TableController } from "./controllers/tables.js";
 import { CategoryController } from "./controllers/categories.js";
-import { OrderController } from "./controllers/orders.js";
-import { OrderItemController } from "./controllers/order-items.js";
+import { TypeormConfigModule } from "../../config/TypeormConfigModule.js";
 
 @Module({
     imports: [TypeormConfigModule],
     controllers: [
-        RestaurantController,
-        FoodRestaurantController,
-        TableController,
         CategoryController,
-        OrderController,
-        OrderItemController
     ],
     providers: [
         LivequeryInterceptor,

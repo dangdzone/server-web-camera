@@ -10,22 +10,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { Column, Entity } from "typeorm";
 import { BaseEntity } from "./BaseEntity.js";
 let Category = class Category extends BaseEntity {
-    restaurant_id;
-    menu_id;
     name;
+    image;
+    href;
 };
 __decorate([
     Column(),
     __metadata("design:type", String)
-], Category.prototype, "restaurant_id", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", String)
-], Category.prototype, "menu_id", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", String)
 ], Category.prototype, "name", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Category.prototype, "image", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Category.prototype, "href", void 0);
 Category = __decorate([
     Entity('categories')
 ], Category);
