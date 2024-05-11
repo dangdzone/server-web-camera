@@ -1,11 +1,11 @@
 import { Column, Entity } from "typeorm"
 import { BaseEntity } from "./BaseEntity.js"
 
-@Entity('brands') // Danh mục camera
+@Entity('brands') // Thương hiệu
 export class Brand extends BaseEntity {
     
     @Column()
-    name: string // Tên danh mục
+    name: string // Tên thương hiệu
 
     @Column()
     image: string // Ảnh

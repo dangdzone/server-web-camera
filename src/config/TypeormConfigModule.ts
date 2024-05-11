@@ -5,11 +5,13 @@ import { MongoConnectionOptions } from "typeorm/driver/mongodb/MongoConnectionOp
 import { Category } from "../entities/Category.js";
 import { Resolution } from "../entities/Resolution.js";
 import { Brand } from "../entities/Brand.js";
+import { Product } from "../entities/Product.js";
 
 export const entities = [
     Category,
     Resolution,
-    Brand
+    Brand,
+    Product
 ]
 
 // Kết nối database

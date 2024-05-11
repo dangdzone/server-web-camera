@@ -12,4 +12,5 @@ export class Resolution extends BaseEntity {
 
     @Column()
     note: string // Ghi chú
+    
 }

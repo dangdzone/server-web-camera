@@ -10,13 +10,15 @@ import { CategoryController } from "./controllers/categories.js";
 import { TypeormConfigModule } from "../../config/TypeormConfigModule.js";
 import { ResolutionController } from "./controllers/resolutions.js";
 import { BrandController } from "./controllers/brands.js";
+import { ProductController } from "./controllers/products.js";
 
 @Module({
     imports: [TypeormConfigModule],
     controllers: [
         CategoryController,
         ResolutionController,
-        BrandController
+        BrandController,
+        ProductController
     ],
     providers: [
         LivequeryInterceptor,

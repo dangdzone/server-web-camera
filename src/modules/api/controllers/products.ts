@@ -3,32 +3,32 @@ import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
-import { Brand } from '../../../entities/Brand.js';
+import { Product } from '../../../entities/Product.js';
 
 
-@Controller('livequery/brands') // Thương hiệu
-export class BrandController {
+@Controller('livequery/products') // Sản phẩm
+export class ProductController {
 
     // Hàm khởi tạo, tạo các biến để thao tác với DB
     constructor(
-        @InjectRepository(Brand) private BrandCollection: MongoRepository<Brand>
+        @InjectRepository(Product) private ProductCollection: MongoRepository<Product>
     ) {
     }
 
     @Get(['', ':id'])
-    @UseTypeormDatasource({ entity: Brand, realtime: true })
+    @UseTypeormDatasource({ entity: Product, realtime: true })
     async list() { }
 
     @Post()
-    @UseTypeormDatasource({ entity: Brand, realtime: true })
+    @UseTypeormDatasource({ entity: Product, realtime: true })
     async create() { }
 
     @Patch(':id')
-    @UseTypeormDatasource({ entity: Brand, realtime: true })
+    @UseTypeormDatasource({ entity: Product, realtime: true })
     async patch() { }
 
     @Delete(':id')
-    @UseTypeormDatasource({ entity: Brand, realtime: true })
+    @UseTypeormDatasource({ entity: Product, realtime: true })
     async del() { }
 
 }
