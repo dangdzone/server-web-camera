@@ -7,8 +7,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Category } from "../entities/Category.js";
+import { Resolution } from "../entities/Resolution.js";
+import { Brand } from "../entities/Brand.js";
 export const entities = [
     Category,
+    Resolution,
+    Brand
 ];
 export const MongoConnectionInfo = {
     url: process.env.DB_URL,

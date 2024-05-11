@@ -3,9 +3,13 @@ import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { MongoConnectionOptions } from "typeorm/driver/mongodb/MongoConnectionOptions.js";
 import { Category } from "../entities/Category.js";
+import { Resolution } from "../entities/Resolution.js";
+import { Brand } from "../entities/Brand.js";
 
 export const entities = [
     Category,
+    Resolution,
+    Brand
 ]
 
 // Kết nối database

@@ -8,11 +8,15 @@ import { LivequeryInterceptor, LivequeryWebsocketSync } from "@livequery/nestjs"
 import { MongoDBRealtimeProvider, TypeormDatasourceProvider } from "./decoraters/UseTypeormDatasource.js";
 import { CategoryController } from "./controllers/categories.js";
 import { TypeormConfigModule } from "../../config/TypeormConfigModule.js";
+import { ResolutionController } from "./controllers/resolutions.js";
+import { BrandController } from "./controllers/brands.js";
 
 @Module({
     imports: [TypeormConfigModule],
     controllers: [
         CategoryController,
+        ResolutionController,
+        BrandController
     ],
     providers: [
         LivequeryInterceptor,
