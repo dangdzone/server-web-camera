@@ -35,6 +35,9 @@ export class Product extends BaseEntity {
     amount: number // số lượng
 
     @Column()
+    product_info: Array<Object> // Thông tin sản phẩm
+
+    @Column()
     specifications: Array<Object> // Thông số kĩ thuật
 
     @Column()
