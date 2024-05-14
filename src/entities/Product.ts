@@ -3,7 +3,7 @@ import { BaseEntity } from "./BaseEntity.js"
 
 @Entity('products') // Danh mục camera
 export class Product extends BaseEntity {
-    
+
     @Column()
     name: string // Tên
 
@@ -35,10 +35,13 @@ export class Product extends BaseEntity {
     amount: number // số lượng
 
     @Column()
-    product_info: Array<Object> // Thông tin sản phẩm
+    product_info: Array<{ name: string, content: string }> // Thông tin sản phẩm
 
     @Column()
-    specifications: Array<Object> // Thông số kĩ thuật
+    specifications: Array<{
+        name: string,
+        technicals: Array<{ name: string, content: string }>
+    }> // Thông số kĩ thuật
 
     @Column()
     category_id: string // Danh mục sản phẩm

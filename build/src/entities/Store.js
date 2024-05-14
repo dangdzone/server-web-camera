@@ -11,8 +11,8 @@ import { Column, Entity } from "typeorm";
 import { BaseEntity } from "./BaseEntity.js";
 let Store = class Store extends BaseEntity {
     name;
-    image;
-    store_list;
+    address;
+    link_map;
 };
 __decorate([
     Column(),
@@ -21,11 +21,11 @@ __decorate([
 __decorate([
     Column(),
     __metadata("design:type", String)
-], Store.prototype, "image", void 0);
+], Store.prototype, "address", void 0);
 __decorate([
     Column(),
-    __metadata("design:type", Array)
-], Store.prototype, "store_list", void 0);
+    __metadata("design:type", String)
+], Store.prototype, "link_map", void 0);
 Store = __decorate([
     Entity('stores')
 ], Store);

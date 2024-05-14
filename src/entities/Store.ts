@@ -8,9 +8,9 @@ export class Store extends BaseEntity {
     name: string // Tên danh mục
 
     @Column()
-    image: string // Ảnh
+    address: string // Địa chỉ
 
     @Column()
-    store_list: Array<Object> // Danh sách cửa hàng
+    link_map: string // google map
 
 }
