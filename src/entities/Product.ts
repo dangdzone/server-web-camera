@@ -35,7 +35,7 @@ export class Product extends BaseEntity {
     amount: number // số lượng
 
     @Column()
-    product_info: Array<{ name: string, content: string }> // Thông tin sản phẩm
+    infos: Array<{ name: string, content: string }> // Thông tin sản phẩm
 
     @Column()
     specifications: Array<{

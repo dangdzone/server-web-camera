@@ -10,7 +10,7 @@ export declare class Product extends BaseEntity {
     description: string;
     resolution_id: string;
     amount: number;
-    product_info: Array<{
+    infos: Array<{
         name: string;
         content: string;
     }>;
