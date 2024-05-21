@@ -17,6 +17,15 @@ export declare class Brand extends BaseEntity {
     image: string;
 }
 
+export declare class Cart extends BaseEntity {
+    product_list: Array<{
+        product_id: string;
+        amount: number;
+        price: number;
+        select: boolean;
+    }>;
+}
+
 export declare class Category extends BaseEntity {
     name: string;
     image: string;
