@@ -22,5 +22,6 @@ export declare class Product extends BaseEntity {
         }>;
     }>;
     category_id: string;
+    outstandings: string[];
     option: Array<Object>;
 }

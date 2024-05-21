@@ -23,6 +23,7 @@ let Product = class Product extends BaseEntity {
     infos;
     specifications;
     category_id;
+    outstandings;
     option;
 };
 __decorate([
@@ -77,6 +78,10 @@ __decorate([
     Column(),
     __metadata("design:type", String)
 ], Product.prototype, "category_id", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", Array)
+], Product.prototype, "outstandings", void 0);
 __decorate([
     Column(),
     __metadata("design:type", Array)

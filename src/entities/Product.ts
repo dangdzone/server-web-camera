@@ -47,6 +47,9 @@ export class Product extends BaseEntity {
     category_id: string // Danh mục sản phẩm
 
     @Column()
+    outstandings: string[] // Đặc điểm nổi bật
+
+    @Column()
     option: Array<Object> // Tùy chọn thêm
 
 }
