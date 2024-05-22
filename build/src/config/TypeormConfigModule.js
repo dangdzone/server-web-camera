@@ -11,12 +11,14 @@ import { Resolution } from "../entities/Resolution.js";
 import { Brand } from "../entities/Brand.js";
 import { Product } from "../entities/Product.js";
 import { Store } from "../entities/Store.js";
+import { Cart } from "../entities/Cart.js";
 export const entities = [
     Category,
     Resolution,
     Brand,
     Product,
-    Store
+    Store,
+    Cart
 ];
 export const MongoConnectionInfo = {
     url: process.env.DB_URL,

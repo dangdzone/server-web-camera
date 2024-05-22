@@ -17,6 +17,7 @@ import { ResolutionController } from "./controllers/resolutions.js";
 import { BrandController } from "./controllers/brands.js";
 import { ProductController } from "./controllers/products.js";
 import { StoreController } from "./controllers/stores.js";
+import { CartController } from "./controllers/carts.js";
 let ApiModule = class ApiModule {
 };
 ApiModule = __decorate([
@@ -27,7 +28,8 @@ ApiModule = __decorate([
             ResolutionController,
             BrandController,
             ProductController,
-            StoreController
+            StoreController,
+            CartController
         ],
         providers: [
             LivequeryInterceptor,

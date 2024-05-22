@@ -5,11 +5,12 @@ import { BaseEntity } from "./BaseEntity.js"
 export class Cart extends BaseEntity {
 
     @Column()
-    product_list: Array<{
-        product_id: string // ID sản phẩm
-        amount: number
-        price: number
-        select: boolean
-    }>
+    product_id: string
+
+    @Column()
+    amount: number
+
+    @Column({ default: false })
+    select: boolean
 
 }

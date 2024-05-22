@@ -10,12 +10,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { Column, Entity } from "typeorm";
 import { BaseEntity } from "./BaseEntity.js";
 let Cart = class Cart extends BaseEntity {
-    product_list;
+    product_id;
+    amount;
+    select;
 };
 __decorate([
     Column(),
-    __metadata("design:type", Array)
-], Cart.prototype, "product_list", void 0);
+    __metadata("design:type", String)
+], Cart.prototype, "product_id", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", Number)
+], Cart.prototype, "amount", void 0);
+__decorate([
+    Column({ default: false }),
+    __metadata("design:type", Boolean)
+], Cart.prototype, "select", void 0);
 Cart = __decorate([
     Entity('carts')
 ], Cart);

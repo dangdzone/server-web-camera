@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
@@ -21,7 +21,27 @@ let CartController = class CartController {
         this.CartCollection = CartCollection;
     }
     async list() { }
-    async create() { }
+    async create(body) {
+        const product_id = body.product_id;
+        console.log({ product_id });
+        const cart = await this.CartCollection.findOne({
+            where: { product_id: body.product_id }
+        });
+        if (cart) {
+            cart.amount += 1;
+            await this.CartCollection.save(cart);
+            console.log('Đã cập nhật ');
+        }
+        else {
+            const newCart = this.CartCollection.create({
+                product_id: product_id,
+                amount: 1,
+                select: body.select || false
+            });
+            await this.CartCollection.save(newCart);
+            console.log('Đã thêm mới');
+        }
+    }
     async patch() { }
     async del() { }
 };
@@ -34,9 +54,9 @@ __decorate([
 ], CartController.prototype, "list", null);
 __decorate([
     Post(),
-    UseTypeormDatasource({ entity: Cart, realtime: true }),
+    __param(0, Body()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Cart]),
     __metadata("design:returntype", Promise)
 ], CartController.prototype, "create", null);
 __decorate([

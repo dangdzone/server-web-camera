@@ -12,6 +12,7 @@ import { ResolutionController } from "./controllers/resolutions.js";
 import { BrandController } from "./controllers/brands.js";
 import { ProductController } from "./controllers/products.js";
 import { StoreController } from "./controllers/stores.js";
+import { CartController } from "./controllers/carts.js";
 
 @Module({
     imports: [TypeormConfigModule],
@@ -20,7 +21,8 @@ import { StoreController } from "./controllers/stores.js";
         ResolutionController,
         BrandController,
         ProductController,
-        StoreController
+        StoreController,
+        CartController
     ],
     providers: [
         LivequeryInterceptor,
