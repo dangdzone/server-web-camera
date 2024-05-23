@@ -27,8 +27,7 @@ export class CartController {
         @Body() body: Cart // thông tin sản phẩm được gửi từ client
     ) { 
         const product_id = body.product_id
-        console.log({product_id})
-
+        
         // Lấy thông tin sản phẩm có trong giỏ hàng hay không
         const cart =  await this.CartCollection.findOne({
             where: { product_id: body.product_id }
@@ -37,7 +36,7 @@ export class CartController {
         if(cart) { // Nếu có product_id trong giỏ thì cập nhật
             cart.amount += 1
             await this.CartCollection.save(cart)
-            console.log('Đã cập nhật ')
+            // console.log('Đã cập nhật ')
         } else { // Nếu không có product_id trong giỏ thì thêm mới
             const newCart = this.CartCollection.create({
                 product_id: product_id,
@@ -45,7 +44,7 @@ export class CartController {
                 select: body.select || false
             });
             await this.CartCollection.save(newCart)
-            console.log('Đã thêm mới')
+            // console.log('Đã thêm mới')
         }
 
     }

@@ -23,14 +23,12 @@ let CartController = class CartController {
     async list() { }
     async create(body) {
         const product_id = body.product_id;
-        console.log({ product_id });
         const cart = await this.CartCollection.findOne({
             where: { product_id: body.product_id }
         });
         if (cart) {
             cart.amount += 1;
             await this.CartCollection.save(cart);
-            console.log('Đã cập nhật ');
         }
         else {
             const newCart = this.CartCollection.create({
@@ -39,7 +37,6 @@ let CartController = class CartController {
                 select: body.select || false
             });
             await this.CartCollection.save(newCart);
-            console.log('Đã thêm mới');
         }
     }
     async patch() { }
