@@ -1,3 +1,14 @@
+
+export declare class Address extends BaseEntity {
+    order_id: string;
+    receiver_name: string;
+    receiver_phone: number;
+    province: string;
+    district: string;
+    ward: string;
+    street: string;
+    note: string;
+}
 export type PermissionList = string;
 export type UserPermissions = {
     [user_uid: string]: PermissionList;
@@ -27,6 +38,23 @@ export declare class Category extends BaseEntity {
     name: string;
     image: string;
     href: string;
+}
+
+export declare class Order extends BaseEntity {
+    name: string;
+    status: string;
+    image: string;
+    orrder_item: Array<{
+        product_id: string;
+        amount: number;
+        select: boolean;
+    }>;
+    amount: number;
+    total: number;
+    discount: number;
+    pay: number;
+    transport_fee: string | number;
+    customer_id: string;
 }
 
 export declare class Product extends BaseEntity {
