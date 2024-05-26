@@ -8,6 +8,9 @@ export class Product extends BaseEntity {
     name: string // Tên
 
     @Column()
+    status: string // Trạng thái
+
+    @Column()
     image: string // Ảnh
 
     @Column()

@@ -109,29 +109,23 @@ export const Owner: AllowCondition = ctx => {
 }
 
 // Chủ cửa hàng
-export const RestaurantOwner: AllowCondition = ctx => {
+export const StoreOwner: AllowCondition = ctx => {
     // return true
     return ctx.req.user?.$?.[ctx.req.params.restaurant_id]?.includes('owner') || ctx.req.user?.$?.[ctx.req.params.id]?.includes('owner')
 }
 
 // Quản lý
-export const RestaurantsManager: AllowCondition = ctx => {
+export const StoreManager: AllowCondition = ctx => {
     return ctx.req.user?.$?.[ctx.req.params.restaurant_id]?.includes('manager') || ctx.req.user?.$?.[ctx.req.params.id]?.includes('manager')  
 }
 
-// Nhân viên phục vụ
-export const RestaurantServingStaff: AllowCondition = ctx => {
+// Nhân viên
+export const StoreStaff: AllowCondition = ctx => {
     return ctx.req.user?.$?.[ctx.req.params.restaurant_id]?.includes('staff') || ctx.req.user?.$?.[ctx.req.params.id]?.includes('staff') 
 }
 
-// Nhân viên thu ngân
-export const RestaurantStaffCashier: AllowCondition = ctx => {
-    return ctx.req.user?.$?.[ctx.req.params.restaurant_id]?.includes('cashier') || ctx.req.user?.$?.[ctx.req.params.id]?.includes('cashier') 
-}
-
 export const RestaurantStaff: AllowCondition = Or(
-    RestaurantOwner,
-    RestaurantsManager,
-    RestaurantServingStaff,
-    RestaurantStaffCashier
+    StoreOwner,
+    StoreManager,
+    StoreStaff,
 )

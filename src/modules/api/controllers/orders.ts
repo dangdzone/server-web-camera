@@ -1,9 +1,10 @@
 
-import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Order } from '../../../entities/Order.js';
+import { Cart } from '../../../entities/Cart.js';
 
 
 @Controller('livequery/orders') // Đơn hàng
@@ -11,7 +12,8 @@ export class OrderController {
 
     // Hàm khởi tạo, tạo các biến để thao tác với DB
     constructor(
-        @InjectRepository(Order) private OrderCollection: MongoRepository<Order>
+        @InjectRepository(Order) private OrderCollection: MongoRepository<Order>,
+        @InjectRepository(Cart) private CartCollection: MongoRepository<Cart>
     ) {
     }
 
@@ -20,8 +22,18 @@ export class OrderController {
     async list() { }
 
     @Post()
-    @UseTypeormDatasource({ entity: Order, realtime: true })
-    async create() { }
+    // @UseTypeormDatasource({ entity: Order, realtime: true })
+    async create(
+        @Body() body: Order
+    ) {
+        const newOrder = this.OrderCollection.create({
+            ...body
+        })
+        // Tạo đơn hàng
+        await this.OrderCollection.save(newOrder)
+        // Xóa sản phẩm được chọn khi tạo đơn hàng
+        await this.CartCollection.deleteMany({ select: true })
+    }
 
     @Patch(':id')
     @UseTypeormDatasource({ entity: Order, realtime: true })

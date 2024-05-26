@@ -59,6 +59,7 @@ export declare class Order extends BaseEntity {
 
 export declare class Product extends BaseEntity {
     name: string;
+    status: string;
     image: string;
     cost: number;
     price: number;

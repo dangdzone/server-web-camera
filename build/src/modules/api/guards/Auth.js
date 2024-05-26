@@ -91,17 +91,14 @@ export const Verified = ctx => {
 export const Owner = ctx => {
     return ctx.req.user?.uid == ctx.req.params.id || ctx.req.user?.uid == ctx.req.params.staff_id || ctx.req.user?.uid == ctx.req.params.owner_id;
 };
-export const RestaurantOwner = ctx => {
+export const StoreOwner = ctx => {
     return ctx.req.user?.$?.[ctx.req.params.restaurant_id]?.includes('owner') || ctx.req.user?.$?.[ctx.req.params.id]?.includes('owner');
 };
-export const RestaurantsManager = ctx => {
+export const StoreManager = ctx => {
     return ctx.req.user?.$?.[ctx.req.params.restaurant_id]?.includes('manager') || ctx.req.user?.$?.[ctx.req.params.id]?.includes('manager');
 };
-export const RestaurantServingStaff = ctx => {
+export const StoreStaff = ctx => {
     return ctx.req.user?.$?.[ctx.req.params.restaurant_id]?.includes('staff') || ctx.req.user?.$?.[ctx.req.params.id]?.includes('staff');
 };
-export const RestaurantStaffCashier = ctx => {
-    return ctx.req.user?.$?.[ctx.req.params.restaurant_id]?.includes('cashier') || ctx.req.user?.$?.[ctx.req.params.id]?.includes('cashier');
-};
-export const RestaurantStaff = Or(RestaurantOwner, RestaurantsManager, RestaurantServingStaff, RestaurantStaffCashier);
+export const RestaurantStaff = Or(StoreOwner, StoreManager, StoreStaff);
 //# sourceMappingURL=Auth.js.map

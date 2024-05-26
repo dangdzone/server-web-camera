@@ -1,9 +1,11 @@
 
-import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Product } from '../../../entities/Product.js';
+import { ObjectId } from 'mongodb';
+import { Cart } from '../../../entities/Cart.js';
 
 
 @Controller('livequery/products') // Sản phẩm
@@ -11,7 +13,8 @@ export class ProductController {
 
     // Hàm khởi tạo, tạo các biến để thao tác với DB
     constructor(
-        @InjectRepository(Product) private ProductCollection: MongoRepository<Product>
+        @InjectRepository(Product) private ProductCollection: MongoRepository<Product>,
+        @InjectRepository(Cart) private CartCollection: MongoRepository<Cart>
     ) {
     }
 
@@ -24,8 +27,36 @@ export class ProductController {
     async create() { }
 
     @Patch(':id')
-    @UseTypeormDatasource({ entity: Product, realtime: true })
-    async patch() { }
+    // @UseTypeormDatasource({ entity: Product, realtime: true })
+    async patch(
+        @Body() body: Product, // Form gửi từ client lên
+        @Param('id') id: string // Lấy id sản phẩm cập nhật
+    ) {
+
+        // Cập nhật lại sản phẩm
+        await this.ProductCollection.updateOne(
+            { _id: new ObjectId(id) },
+            { $set: { ...body } }
+        )
+
+        // Check xem sản phẩm cập nhật có trong cart không ?
+        const cart_item = await this.CartCollection.findOne(
+            { where: { product_id: id } }
+        )
+
+        // Nếu có sản phẩm trong giỏ hàng
+        if (cart_item) {
+            //check xem amount vừa cập nhật nó có nhỏ hơn amount của sản phẩm trong giỏ hàng không 
+            const check_amount = cart_item.amount > body.amount
+            if (check_amount) {
+                await this.CartCollection.updateOne(
+                    { product_id: id },
+                    { $set: { amount: body.amount } }
+                )
+            }
+        }
+
+    }
 
     @Delete(':id')
     @UseTypeormDatasource({ entity: Product, realtime: true })

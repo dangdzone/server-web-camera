@@ -1,10 +1,12 @@
 import { MongoRepository } from 'typeorm';
 import { Order } from '../../../entities/Order.js';
+import { Cart } from '../../../entities/Cart.js';
 export declare class OrderController {
     private OrderCollection;
-    constructor(OrderCollection: MongoRepository<Order>);
+    private CartCollection;
+    constructor(OrderCollection: MongoRepository<Order>, CartCollection: MongoRepository<Cart>);
     list(): Promise<void>;
-    create(): Promise<void>;
+    create(body: Order): Promise<void>;
     patch(): Promise<void>;
     del(): Promise<void>;
 }

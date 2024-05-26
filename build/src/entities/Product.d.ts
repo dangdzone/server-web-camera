@@ -1,6 +1,7 @@
 import { BaseEntity } from "./BaseEntity.js";
 export declare class Product extends BaseEntity {
     name: string;
+    status: string;
     image: string;
     cost: number;
     price: number;

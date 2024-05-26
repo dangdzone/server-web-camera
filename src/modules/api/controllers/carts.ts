@@ -4,9 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Cart } from '../../../entities/Cart.js';
-import { LivequeryResponse } from '@livequery/nestjs';
-import { ObjectId } from 'mongodb';
-
 
 @Controller('livequery/carts') // Giỏ hàng
 export class CartController {

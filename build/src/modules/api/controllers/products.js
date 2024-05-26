@@ -10,19 +10,32 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Product } from '../../../entities/Product.js';
+import { ObjectId } from 'mongodb';
+import { Cart } from '../../../entities/Cart.js';
 let ProductController = class ProductController {
     ProductCollection;
-    constructor(ProductCollection) {
+    CartCollection;
+    constructor(ProductCollection, CartCollection) {
         this.ProductCollection = ProductCollection;
+        this.CartCollection = CartCollection;
     }
     async list() { }
     async create() { }
-    async patch() { }
+    async patch(body, id) {
+        await this.ProductCollection.updateOne({ _id: new ObjectId(id) }, { $set: { ...body } });
+        const cart_item = await this.CartCollection.findOne({ where: { product_id: id } });
+        if (cart_item) {
+            const check_amount = cart_item.amount > body.amount;
+            if (check_amount) {
+                await this.CartCollection.updateOne({ product_id: id }, { $set: { amount: body.amount } });
+            }
+        }
+    }
     async del() { }
 };
 __decorate([
@@ -41,9 +54,10 @@ __decorate([
 ], ProductController.prototype, "create", null);
 __decorate([
     Patch(':id'),
-    UseTypeormDatasource({ entity: Product, realtime: true }),
+    __param(0, Body()),
+    __param(1, Param('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Product, String]),
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "patch", null);
 __decorate([
@@ -56,7 +70,9 @@ __decorate([
 ProductController = __decorate([
     Controller('livequery/products'),
     __param(0, InjectRepository(Product)),
-    __metadata("design:paramtypes", [MongoRepository])
+    __param(1, InjectRepository(Cart)),
+    __metadata("design:paramtypes", [MongoRepository,
+        MongoRepository])
 ], ProductController);
 export { ProductController };
 //# sourceMappingURL=products.js.map

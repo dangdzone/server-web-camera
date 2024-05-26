@@ -11,6 +11,7 @@ import { Column, Entity } from "typeorm";
 import { BaseEntity } from "./BaseEntity.js";
 let Product = class Product extends BaseEntity {
     name;
+    status;
     image;
     cost;
     price;
@@ -30,6 +31,10 @@ __decorate([
     Column(),
     __metadata("design:type", String)
 ], Product.prototype, "name", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Product.prototype, "status", void 0);
 __decorate([
     Column(),
     __metadata("design:type", String)

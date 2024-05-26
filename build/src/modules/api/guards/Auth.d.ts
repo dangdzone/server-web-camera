@@ -27,9 +27,8 @@ export declare const CheckParam: (param: string, permissions: {
 export declare const Logged: AllowCondition;
 export declare const Verified: AllowCondition;
 export declare const Owner: AllowCondition;
-export declare const RestaurantOwner: AllowCondition;
-export declare const RestaurantsManager: AllowCondition;
-export declare const RestaurantServingStaff: AllowCondition;
-export declare const RestaurantStaffCashier: AllowCondition;
+export declare const StoreOwner: AllowCondition;
+export declare const StoreManager: AllowCondition;
+export declare const StoreStaff: AllowCondition;
 export declare const RestaurantStaff: AllowCondition;
 export {};
