@@ -25,11 +25,16 @@ let OrderController = class OrderController {
     }
     async list() { }
     async create(body) {
-        const newOrder = this.OrderCollection.create({
+        const newOrder = await this.OrderCollection.create({
             ...body
         });
         await this.OrderCollection.save(newOrder);
         await this.CartCollection.deleteMany({ select: true });
+        return {
+            data: {
+                item: newOrder
+            }
+        };
     }
     async patch() { }
     async del() { }

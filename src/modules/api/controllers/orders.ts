@@ -1,5 +1,5 @@
 
-import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
@@ -26,18 +26,26 @@ export class OrderController {
     async create(
         @Body() body: Order
     ) {
-        const newOrder = this.OrderCollection.create({
+        const newOrder = await this.OrderCollection.create({
             ...body
         })
         // Tạo đơn hàng
         await this.OrderCollection.save(newOrder)
         // Xóa sản phẩm được chọn khi tạo đơn hàng
         await this.CartCollection.deleteMany({ select: true })
+
+        return {
+            data: {
+                item: newOrder
+            }
+        }
     }
 
     @Patch(':id')
     @UseTypeormDatasource({ entity: Order, realtime: true })
-    async patch() { }
+    async patch(
+
+    ) { }
 
     @Delete(':id')
     @UseTypeormDatasource({ entity: Order, realtime: true })

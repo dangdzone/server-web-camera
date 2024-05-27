@@ -3,7 +3,7 @@ import { BaseEntity } from "./BaseEntity.js"
 
 @Entity('orders') // Đơn hàng
 export class Order extends BaseEntity {
-    
+
     @Column()
     name: string // Tên danh mục
 
@@ -14,7 +14,7 @@ export class Order extends BaseEntity {
     image: string
 
     @Column()
-    orrder_item: Array<{
+    order_item: Array<{
         product_id: string
         amount: number
         select: boolean
@@ -33,9 +33,19 @@ export class Order extends BaseEntity {
     pay: number // Tiền thanh toán
 
     @Column()
-    transport_fee: string | number // Phí vận chuyển
+    transport_fee: number // Phí vận chuyển
 
     @Column()
     customer_id: string // Thông tin khách hàng
 
+    @Column()
+    receiver_info: {
+        receiver_name: string // Tên người nhận
+        receiver_phone: number // sdt người nhận
+        province: number // Tỉnh
+        district: number // huyện
+        ward: number // Phường, xã
+        street: number // Số nhà, tên đường
+        note: string // ghi chú
+    }
 }

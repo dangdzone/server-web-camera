@@ -13,13 +13,14 @@ let Order = class Order extends BaseEntity {
     name;
     status;
     image;
-    orrder_item;
+    order_item;
     amount;
     total;
     discount;
     pay;
     transport_fee;
     customer_id;
+    receiver_info;
 };
 __decorate([
     Column(),
@@ -36,7 +37,7 @@ __decorate([
 __decorate([
     Column(),
     __metadata("design:type", Array)
-], Order.prototype, "orrder_item", void 0);
+], Order.prototype, "order_item", void 0);
 __decorate([
     Column(),
     __metadata("design:type", Number)
@@ -55,12 +56,16 @@ __decorate([
 ], Order.prototype, "pay", void 0);
 __decorate([
     Column(),
-    __metadata("design:type", Object)
+    __metadata("design:type", Number)
 ], Order.prototype, "transport_fee", void 0);
 __decorate([
     Column(),
     __metadata("design:type", String)
 ], Order.prototype, "customer_id", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", Object)
+], Order.prototype, "receiver_info", void 0);
 Order = __decorate([
     Entity('orders')
 ], Order);
