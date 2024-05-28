@@ -13,7 +13,6 @@ import { Product } from "../entities/Product.js";
 import { Store } from "../entities/Store.js";
 import { Cart } from "../entities/Cart.js";
 import { Order } from "../entities/Order.js";
-import { Address } from "../entities/Address.js";
 export const entities = [
     Category,
     Resolution,
@@ -22,7 +21,6 @@ export const entities = [
     Store,
     Cart,
     Order,
-    Address
 ];
 export const MongoConnectionInfo = {
     url: process.env.DB_URL,

@@ -1,14 +1,3 @@
-
-export declare class Address extends BaseEntity {
-    order_id: string;
-    receiver_name: string;
-    receiver_phone: number;
-    province: string;
-    district: string;
-    ward: string;
-    street: string;
-    note: string;
-}
 export type PermissionList = string;
 export type UserPermissions = {
     [user_uid: string]: PermissionList;
@@ -29,6 +18,7 @@ export declare class Brand extends BaseEntity {
 }
 
 export declare class Cart extends BaseEntity {
+    customer_id: string;
     product_id: string;
     amount: number;
     select: boolean;
@@ -41,10 +31,9 @@ export declare class Category extends BaseEntity {
 }
 
 export declare class Order extends BaseEntity {
-    name: string;
+    code: string;
     status: string;
-    image: string;
-    order_item: Array<{
+    order_items: Array<{
         product_id: string;
         amount: number;
         select: boolean;
@@ -53,7 +42,7 @@ export declare class Order extends BaseEntity {
     total: number;
     discount: number;
     pay: number;
-    transport_fee: number;
+    shipping_fee: number;
     customer_id: string;
     receiver_info: {
         receiver_name: string;

@@ -5,16 +5,13 @@ import { BaseEntity } from "./BaseEntity.js"
 export class Order extends BaseEntity {
 
     @Column()
-    name: string // Tên danh mục
+    code: string // Mã đơn hàng
 
     @Column()
     status: string // Trạng thái
 
-    @Column()
-    image: string
-
-    @Column()
-    order_item: Array<{
+    @Column() // Danh sách sản phẩm của đơn hàng đấy
+    order_items: Array<{
         product_id: string
         amount: number
         select: boolean
@@ -33,7 +30,7 @@ export class Order extends BaseEntity {
     pay: number // Tiền thanh toán
 
     @Column()
-    transport_fee: number // Phí vận chuyển
+    shipping_fee: number // Phí vận chuyển
 
     @Column()
     customer_id: string // Thông tin khách hàng

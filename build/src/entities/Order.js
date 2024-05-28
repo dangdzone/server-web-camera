@@ -10,34 +10,29 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { Column, Entity } from "typeorm";
 import { BaseEntity } from "./BaseEntity.js";
 let Order = class Order extends BaseEntity {
-    name;
+    code;
     status;
-    image;
-    order_item;
+    order_items;
     amount;
     total;
     discount;
     pay;
-    transport_fee;
+    shipping_fee;
     customer_id;
     receiver_info;
 };
 __decorate([
     Column(),
     __metadata("design:type", String)
-], Order.prototype, "name", void 0);
+], Order.prototype, "code", void 0);
 __decorate([
     Column(),
     __metadata("design:type", String)
 ], Order.prototype, "status", void 0);
 __decorate([
     Column(),
-    __metadata("design:type", String)
-], Order.prototype, "image", void 0);
-__decorate([
-    Column(),
     __metadata("design:type", Array)
-], Order.prototype, "order_item", void 0);
+], Order.prototype, "order_items", void 0);
 __decorate([
     Column(),
     __metadata("design:type", Number)
@@ -57,7 +52,7 @@ __decorate([
 __decorate([
     Column(),
     __metadata("design:type", Number)
-], Order.prototype, "transport_fee", void 0);
+], Order.prototype, "shipping_fee", void 0);
 __decorate([
     Column(),
     __metadata("design:type", String)

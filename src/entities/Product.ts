@@ -40,11 +40,11 @@ export class Product extends BaseEntity {
     @Column()
     infos: Array<{ name: string, content: string }> // Thông tin sản phẩm
 
-    @Column()
+    @Column() // Thông số kĩ thuật
     specifications: Array<{
         name: string,
         technicals: Array<{ name: string, content: string }>
-    }> // Thông số kĩ thuật
+    }> 
 
     @Column()
     category_id: string // Danh mục sản phẩm

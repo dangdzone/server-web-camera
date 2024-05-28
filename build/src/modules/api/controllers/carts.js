@@ -23,8 +23,9 @@ let CartController = class CartController {
     async list() { }
     async create(body) {
         const product_id = body.product_id;
+        console.log(body);
         const cart = await this.CartCollection.findOne({
-            where: { product_id: body.product_id }
+            where: { product_id: body.product_id, customer_id: body.customer_id }
         });
         if (cart) {
             cart.amount += 1;
@@ -32,6 +33,7 @@ let CartController = class CartController {
         }
         else {
             const newCart = this.CartCollection.create({
+                customer_id: body.customer_id,
                 product_id: product_id,
                 amount: 1,
                 select: body.select || false
@@ -71,7 +73,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], CartController.prototype, "del", null);
 CartController = __decorate([
-    Controller('livequery/carts'),
+    Controller('livequery/customers/:customer_id/carts'),
     __param(0, InjectRepository(Cart)),
     __metadata("design:paramtypes", [MongoRepository])
 ], CartController);

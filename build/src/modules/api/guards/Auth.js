@@ -85,9 +85,6 @@ export const CheckParam = (param, permissions) => async (ctx) => {
 export const Logged = ctx => {
     return !!ctx.req.user;
 };
-export const Verified = ctx => {
-    return ctx.req.user?.$?.verified;
-};
 export const Owner = ctx => {
     return ctx.req.user?.uid == ctx.req.params.id || ctx.req.user?.uid == ctx.req.params.staff_id || ctx.req.user?.uid == ctx.req.params.owner_id;
 };
@@ -97,8 +94,5 @@ export const StoreOwner = ctx => {
 export const StoreManager = ctx => {
     return ctx.req.user?.$?.[ctx.req.params.restaurant_id]?.includes('manager') || ctx.req.user?.$?.[ctx.req.params.id]?.includes('manager');
 };
-export const StoreStaff = ctx => {
-    return ctx.req.user?.$?.[ctx.req.params.restaurant_id]?.includes('staff') || ctx.req.user?.$?.[ctx.req.params.id]?.includes('staff');
-};
-export const RestaurantStaff = Or(StoreOwner, StoreManager, StoreStaff);
+export const RestaurantStaff = Or(Logged, Owner, StoreOwner, StoreManager);
 //# sourceMappingURL=Auth.js.map

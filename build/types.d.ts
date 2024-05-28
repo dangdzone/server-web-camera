@@ -39,7 +39,7 @@ export declare class Order extends BaseEntity {
     name: string;
     status: string;
     image: string;
-    orrder_item: Array<{
+    order_item: Array<{
         product_id: string;
         amount: number;
         select: boolean;
@@ -48,8 +48,17 @@ export declare class Order extends BaseEntity {
     total: number;
     discount: number;
     pay: number;
-    transport_fee: string | number;
+    transport_fee: number;
     customer_id: string;
+    receiver_info: {
+        receiver_name: string;
+        receiver_phone: number;
+        province: number;
+        district: number;
+        ward: number;
+        street: number;
+        note: string;
+    };
 }
 export declare class Product extends BaseEntity {
     name: string;

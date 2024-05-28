@@ -5,6 +5,9 @@ import { BaseEntity } from "./BaseEntity.js"
 export class Cart extends BaseEntity {
 
     @Column()
+    customer_id: string
+
+    @Column()
     product_id: string
 
     @Column()

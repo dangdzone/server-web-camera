@@ -3,8 +3,8 @@ import { Resolution } from "../entities/Resolution.js";
 import { Brand } from "../entities/Brand.js";
 import { Store } from "../entities/Store.js";
 import { Cart } from "../entities/Cart.js";
-import { Address } from "../entities/Address.js";
-export declare const entities: (typeof Resolution | typeof Brand | typeof Store | typeof Cart | typeof Address)[];
+import { Order } from "../entities/Order.js";
+export declare const entities: (typeof Resolution | typeof Brand | typeof Store | typeof Cart | typeof Order)[];
 export declare const MongoConnectionInfo: MongoConnectionOptions;
 export declare class TypeormConfigModule {
 }

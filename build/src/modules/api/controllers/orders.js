@@ -23,38 +23,39 @@ let OrderController = class OrderController {
         this.OrderCollection = OrderCollection;
         this.CartCollection = CartCollection;
     }
-    async list() { }
+    async listALL() { }
+    async listCustomerId() {
+    }
     async create(body) {
-        const newOrder = await this.OrderCollection.create({
-            ...body
-        });
-        await this.OrderCollection.save(newOrder);
         await this.CartCollection.deleteMany({ select: true });
-        return {
-            data: {
-                item: newOrder
-            }
-        };
     }
     async patch() { }
     async del() { }
 };
 __decorate([
-    Get(['', ':id']),
+    Get(['orders', ':id']),
     UseTypeormDatasource({ entity: Order, realtime: true }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], OrderController.prototype, "list", null);
+], OrderController.prototype, "listALL", null);
 __decorate([
-    Post(),
+    Get(['customers/:uid/orders', 'customers/:uid/orders/:id']),
+    UseTypeormDatasource({ entity: Order, realtime: true }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], OrderController.prototype, "listCustomerId", null);
+__decorate([
+    Post(['orders']),
+    UseTypeormDatasource({ entity: Order, realtime: true }),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Order]),
     __metadata("design:returntype", Promise)
 ], OrderController.prototype, "create", null);
 __decorate([
-    Patch(':id'),
+    Patch('orders/:id'),
     UseTypeormDatasource({ entity: Order, realtime: true }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -68,7 +69,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], OrderController.prototype, "del", null);
 OrderController = __decorate([
-    Controller('livequery/orders'),
+    Controller('livequery'),
     __param(0, InjectRepository(Order)),
     __param(1, InjectRepository(Cart)),
     __metadata("design:paramtypes", [MongoRepository,
