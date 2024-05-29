@@ -4,7 +4,8 @@ export declare class CartController {
     private CartCollection;
     constructor(CartCollection: MongoRepository<Cart>);
     list(): Promise<void>;
-    create(body: Cart): Promise<void>;
+    create(): Promise<void>;
+    patchALL(body: Cart): Promise<string>;
     patch(): Promise<void>;
     del(): Promise<void>;
 }

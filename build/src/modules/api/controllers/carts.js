@@ -21,9 +21,8 @@ let CartController = class CartController {
         this.CartCollection = CartCollection;
     }
     async list() { }
-    async create(body) {
-        const product_id = body.product_id;
-        console.log(body);
+    async create() { }
+    async patchALL(body) {
         const cart = await this.CartCollection.findOne({
             where: { product_id: body.product_id, customer_id: body.customer_id }
         });
@@ -32,13 +31,7 @@ let CartController = class CartController {
             await this.CartCollection.save(cart);
         }
         else {
-            const newCart = this.CartCollection.create({
-                customer_id: body.customer_id,
-                product_id: product_id,
-                amount: 1,
-                select: body.select || false
-            });
-            await this.CartCollection.save(newCart);
+            return ('Vui lòng thử lại');
         }
     }
     async patch() { }
@@ -53,11 +46,18 @@ __decorate([
 ], CartController.prototype, "list", null);
 __decorate([
     Post(),
+    UseTypeormDatasource({ entity: Cart, realtime: true }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], CartController.prototype, "create", null);
+__decorate([
+    Patch(),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Cart]),
     __metadata("design:returntype", Promise)
-], CartController.prototype, "create", null);
+], CartController.prototype, "patchALL", null);
 __decorate([
     Patch(':id'),
     UseTypeormDatasource({ entity: Cart, realtime: true }),
