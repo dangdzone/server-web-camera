@@ -4,9 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Product } from '../../../entities/Product.js';
-import { ObjectId } from 'mongodb';
 import { Cart } from '../../../entities/Cart.js';
-
 
 @Controller('livequery/products') // Sản phẩm
 export class ProductController {
@@ -27,17 +25,11 @@ export class ProductController {
     async create() { }
 
     @Patch(':id')
-    // @UseTypeormDatasource({ entity: Product, realtime: true })
+    @UseTypeormDatasource({ entity: Product, realtime: true })
     async patch(
-        @Body() body: Product, // Form gửi từ client lên
+        @Body() body: Product,
         @Param('id') id: string // Lấy id sản phẩm cập nhật
     ) {
-
-        // Cập nhật lại sản phẩm
-        await this.ProductCollection.updateOne(
-            { _id: new ObjectId(id) },
-            { $set: { ...body } }
-        )
 
         // Check xem sản phẩm cập nhật có trong cart không ?
         const cart_item = await this.CartCollection.findOne(
@@ -54,6 +46,13 @@ export class ProductController {
                     { $set: { amount: body.amount } }
                 )
             }
+            if (body.amount > 0 && cart_item.amount == 0) {
+                await this.CartCollection.updateOne(
+                    { product_id: id },
+                    { $set: { amount: 1 } }
+                )
+            }
+
         }
 
     }

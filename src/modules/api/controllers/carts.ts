@@ -28,7 +28,6 @@ export class CartController {
     async patchALL(
         @Body() body: Cart
     ) {
-
         // Lấy thông tin sản phẩm có trong giỏ hàng hay không
         const cart = await this.CartCollection.findOne({
             where: { product_id: body.product_id, customer_id: body.customer_id }
@@ -38,8 +37,6 @@ export class CartController {
             cart.amount += 1
             await this.CartCollection.save(cart)
             // console.log('Đã cập nhật ')
-        } else { // Nếu không có product_id trong giỏ thì thêm mới
-            return ('Vui lòng thử lại')
         }
     }
     @Patch(':id')

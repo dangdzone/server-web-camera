@@ -30,9 +30,6 @@ let CartController = class CartController {
             cart.amount += 1;
             await this.CartCollection.save(cart);
         }
-        else {
-            return ('Vui lòng thử lại');
-        }
     }
     async patch() { }
     async del() { }

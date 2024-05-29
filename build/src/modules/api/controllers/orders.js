@@ -10,12 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Order } from '../../../entities/Order.js';
 import { Cart } from '../../../entities/Cart.js';
+import { Logged, WhoCanDoThat } from '../guards/Auth.js';
 let OrderController = class OrderController {
     OrderCollection;
     CartCollection;
@@ -23,10 +24,11 @@ let OrderController = class OrderController {
         this.OrderCollection = OrderCollection;
         this.CartCollection = CartCollection;
     }
-    async listALL() { }
-    async listCustomerId() {
+    async listALL() {
+        console.log('Tất cả');
     }
-    async create(body) {
+    async listCustomer() { }
+    async create() {
         await this.CartCollection.deleteMany({ select: true });
     }
     async patch() { }
@@ -40,18 +42,18 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], OrderController.prototype, "listALL", null);
 __decorate([
-    Get(['customers/:uid/orders', 'customers/:uid/orders/:id']),
+    Get(['customers/:customer_id/orders', 'customers/:customer_id/orders/:id']),
+    WhoCanDoThat(Logged, ctx => ctx.req.params.uid == ctx.req.user.uid),
     UseTypeormDatasource({ entity: Order, realtime: true }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], OrderController.prototype, "listCustomerId", null);
+], OrderController.prototype, "listCustomer", null);
 __decorate([
     Post(['orders']),
     UseTypeormDatasource({ entity: Order, realtime: true }),
-    __param(0, Body()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Order]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], OrderController.prototype, "create", null);
 __decorate([

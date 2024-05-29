@@ -1,11 +1,12 @@
 
-import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Order } from '../../../entities/Order.js';
 import { Cart } from '../../../entities/Cart.js';
-
+import { FirebaseUser } from '../decoraters/FirebaseUser.js';
+import { Logged, WhoCanDoThat } from '../guards/Auth.js';
 
 @Controller('livequery') // Đơn hàng
 export class OrderController {
@@ -19,43 +20,26 @@ export class OrderController {
     // Orders of all customers
     @Get(['orders', ':id'])
     @UseTypeormDatasource({ entity: Order, realtime: true })
-    async listALL() { }
+    async listALL() {
+        console.log('Tất cả')
+    }
 
     // Orders of 1 customers
-    @Get(['customers/:uid/orders', 'customers/:uid/orders/:id'])
+    @Get(['customers/:customer_id/orders', 'customers/:customer_id/orders/:id'])
+    @WhoCanDoThat(Logged, ctx => ctx.req.params.uid == ctx.req.user.uid)
     @UseTypeormDatasource({ entity: Order, realtime: true })
-    async listCustomerId(
-
-    ) {
-
-    }
+    async listCustomer() { }
 
     @Post(['orders'])
     @UseTypeormDatasource({ entity: Order, realtime: true })
-    async create(
-        @Body() body: Order
-    ) {
-        // const newOrder = await this.OrderCollection.create({
-        //     ...body,
-        // })
-        // // Tạo đơn hàng
-        // await this.OrderCollection.save(newOrder)
-
+    async create() {
         // Xóa sản phẩm trong giỏ chọn khi tạo đơn hàng
         await this.CartCollection.deleteMany({ select: true })
-
-        // return {
-        //     data: {
-        //         item: newOrder
-        //     }
-        // }
     }
 
     @Patch('orders/:id')
     @UseTypeormDatasource({ entity: Order, realtime: true })
-    async patch(
-
-    ) { }
+    async patch() { }
 
     @Delete(':id')
     @UseTypeormDatasource({ entity: Order, realtime: true })

@@ -15,7 +15,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Product } from '../../../entities/Product.js';
-import { ObjectId } from 'mongodb';
 import { Cart } from '../../../entities/Cart.js';
 let ProductController = class ProductController {
     ProductCollection;
@@ -27,12 +26,14 @@ let ProductController = class ProductController {
     async list() { }
     async create() { }
     async patch(body, id) {
-        await this.ProductCollection.updateOne({ _id: new ObjectId(id) }, { $set: { ...body } });
         const cart_item = await this.CartCollection.findOne({ where: { product_id: id } });
         if (cart_item) {
             const check_amount = cart_item.amount > body.amount;
             if (check_amount) {
                 await this.CartCollection.updateOne({ product_id: id }, { $set: { amount: body.amount } });
+            }
+            if (body.amount > 0 && cart_item.amount == 0) {
+                await this.CartCollection.updateOne({ product_id: id }, { $set: { amount: 1 } });
             }
         }
     }
@@ -54,6 +55,7 @@ __decorate([
 ], ProductController.prototype, "create", null);
 __decorate([
     Patch(':id'),
+    UseTypeormDatasource({ entity: Product, realtime: true }),
     __param(0, Body()),
     __param(1, Param('id')),
     __metadata("design:type", Function),
