@@ -15,6 +15,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Cart } from '../../../entities/Cart.js';
+import { Logged, WhoCanDoThat } from '../guards/Auth.js';
 let CartController = class CartController {
     CartCollection;
     constructor(CartCollection) {
@@ -43,6 +44,7 @@ __decorate([
 ], CartController.prototype, "list", null);
 __decorate([
     Post(),
+    WhoCanDoThat(Logged),
     UseTypeormDatasource({ entity: Cart, realtime: true }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -50,6 +52,7 @@ __decorate([
 ], CartController.prototype, "create", null);
 __decorate([
     Patch(),
+    WhoCanDoThat(Logged, ctx => ctx.req.params.uid == ctx.req.user.uid),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Cart]),
@@ -57,6 +60,7 @@ __decorate([
 ], CartController.prototype, "patchALL", null);
 __decorate([
     Patch(':id'),
+    WhoCanDoThat(Logged, ctx => ctx.req.params.uid == ctx.req.user.uid),
     UseTypeormDatasource({ entity: Cart, realtime: true }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),

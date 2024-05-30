@@ -5,7 +5,6 @@ import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Order } from '../../../entities/Order.js';
 import { Cart } from '../../../entities/Cart.js';
-import { FirebaseUser } from '../decoraters/FirebaseUser.js';
 import { Logged, WhoCanDoThat } from '../guards/Auth.js';
 
 @Controller('livequery') // Đơn hàng
@@ -31,6 +30,7 @@ export class OrderController {
     async listCustomer() { }
 
     @Post(['orders'])
+    @WhoCanDoThat(Logged, ctx => ctx.req.params.uid == ctx.req.user.uid)
     @UseTypeormDatasource({ entity: Order, realtime: true })
     async create() {
         // Xóa sản phẩm trong giỏ chọn khi tạo đơn hàng
@@ -38,6 +38,7 @@ export class OrderController {
     }
 
     @Patch('orders/:id')
+    @WhoCanDoThat(Logged, ctx => ctx.req.params.uid == ctx.req.user.uid)
     @UseTypeormDatasource({ entity: Order, realtime: true })
     async patch() { }
 

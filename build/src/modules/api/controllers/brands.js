@@ -15,6 +15,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Brand } from '../../../entities/Brand.js';
+import { Owner, WhoCanDoThat } from '../guards/Auth.js';
 let BrandController = class BrandController {
     BrandCollection;
     constructor(BrandCollection) {
@@ -34,6 +35,7 @@ __decorate([
 ], BrandController.prototype, "list", null);
 __decorate([
     Post(),
+    WhoCanDoThat(Owner),
     UseTypeormDatasource({ entity: Brand, realtime: true }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -41,6 +43,7 @@ __decorate([
 ], BrandController.prototype, "create", null);
 __decorate([
     Patch(':id'),
+    WhoCanDoThat(Owner),
     UseTypeormDatasource({ entity: Brand, realtime: true }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),

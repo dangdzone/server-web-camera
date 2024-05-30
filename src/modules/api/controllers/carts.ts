@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Cart } from '../../../entities/Cart.js';
-import { Logged, Owner, WhoCanDoThat, StoreOwner } from '../guards/Auth.js';
+import { Logged, Owner, WhoCanDoThat } from '../guards/Auth.js';
 
 @Controller('livequery/customers/:customer_id/carts') // Giỏ hàng
 export class CartController {
@@ -20,11 +20,13 @@ export class CartController {
     async list() { }
 
     @Post()
+    @WhoCanDoThat(Logged)
     @UseTypeormDatasource({ entity: Cart, realtime: true })
     async create(
     ) { }
 
     @Patch()
+    @WhoCanDoThat(Logged, ctx => ctx.req.params.uid == ctx.req.user.uid)
     async patchALL(
         @Body() body: Cart
     ) {
@@ -39,7 +41,9 @@ export class CartController {
             // console.log('Đã cập nhật ')
         }
     }
+
     @Patch(':id')
+    @WhoCanDoThat(Logged, ctx => ctx.req.params.uid == ctx.req.user.uid)
     @UseTypeormDatasource({ entity: Cart, realtime: true })
     async patch() { }
 

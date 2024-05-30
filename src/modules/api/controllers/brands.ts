@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Brand } from '../../../entities/Brand.js';
+import { Owner, WhoCanDoThat } from '../guards/Auth.js';
 
 
 @Controller('livequery/brands') // Thương hiệu
@@ -20,10 +21,12 @@ export class BrandController {
     async list() { }
 
     @Post()
+    @WhoCanDoThat(Owner)
     @UseTypeormDatasource({ entity: Brand, realtime: true })
     async create() { }
 
     @Patch(':id')
+    @WhoCanDoThat(Owner)
     @UseTypeormDatasource({ entity: Brand, realtime: true })
     async patch() { }
 

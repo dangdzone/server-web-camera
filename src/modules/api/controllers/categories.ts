@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Category } from '../../../entities/Category.js';
+import { Owner, WhoCanDoThat } from '../guards/Auth.js';
 
 
 @Controller('livequery/categories') // Danh mục
@@ -20,10 +21,12 @@ export class CategoryController {
     async list() { }
 
     @Post()
+    @WhoCanDoThat(Owner)
     @UseTypeormDatasource({ entity: Category, realtime: true })
     async create() { }
 
     @Patch(':id')
+    @WhoCanDoThat(Owner)
     @UseTypeormDatasource({ entity: Category, realtime: true })
     async patch() { }
 

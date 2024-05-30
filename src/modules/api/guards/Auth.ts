@@ -100,24 +100,10 @@ export const Logged: AllowCondition = ctx => {
 
 // Chủ của tài nguyên / thực thể tương ứng (VD: người tạo đơn hàng)
 export const Owner: AllowCondition = ctx => {
-    return ctx.req.user?.uid == ctx.req.params.id || ctx.req.user?.uid == ctx.req.params.staff_id || ctx.req.user?.uid == ctx.req.params.owner_id// Chi tiết thông tin của người đó
+    return ctx.req.user?.uid == ctx.req.params.id // Chi tiết thông tin của người đó
 }
-
-// Chủ cửa hàng
-export const StoreOwner: AllowCondition = ctx => {
-    // return true
-    return ctx.req.user?.$?.[ctx.req.params.restaurant_id]?.includes('owner') || ctx.req.user?.$?.[ctx.req.params.id]?.includes('owner')
-}
-
-// Quản lý
-export const StoreManager: AllowCondition = ctx => {
-    return ctx.req.user?.$?.[ctx.req.params.restaurant_id]?.includes('manager') || ctx.req.user?.$?.[ctx.req.params.id]?.includes('manager')  
-}
-
 
 export const RestaurantStaff: AllowCondition = Or(
     Logged,
     Owner,
-    StoreOwner,
-    StoreManager,
 )

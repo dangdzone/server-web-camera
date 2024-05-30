@@ -26,7 +26,5 @@ export declare const CheckParam: (param: string, permissions: {
 }) => (ctx: AuthContext) => Promise<boolean>;
 export declare const Logged: AllowCondition;
 export declare const Owner: AllowCondition;
-export declare const StoreOwner: AllowCondition;
-export declare const StoreManager: AllowCondition;
 export declare const RestaurantStaff: AllowCondition;
 export {};

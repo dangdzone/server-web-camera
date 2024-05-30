@@ -51,6 +51,7 @@ __decorate([
 ], OrderController.prototype, "listCustomer", null);
 __decorate([
     Post(['orders']),
+    WhoCanDoThat(Logged, ctx => ctx.req.params.uid == ctx.req.user.uid),
     UseTypeormDatasource({ entity: Order, realtime: true }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -58,6 +59,7 @@ __decorate([
 ], OrderController.prototype, "create", null);
 __decorate([
     Patch('orders/:id'),
+    WhoCanDoThat(Logged, ctx => ctx.req.params.uid == ctx.req.user.uid),
     UseTypeormDatasource({ entity: Order, realtime: true }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),

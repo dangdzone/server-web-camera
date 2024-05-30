@@ -16,6 +16,7 @@ import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Product } from '../../../entities/Product.js';
 import { Cart } from '../../../entities/Cart.js';
+import { Owner, WhoCanDoThat } from '../guards/Auth.js';
 let ProductController = class ProductController {
     ProductCollection;
     CartCollection;
@@ -26,15 +27,12 @@ let ProductController = class ProductController {
     async list() { }
     async create() { }
     async patch(body, id) {
-        const cart_item = await this.CartCollection.findOne({ where: { product_id: id } });
-        if (cart_item) {
-            const check_amount = cart_item.amount > body.amount;
-            if (check_amount) {
-                await this.CartCollection.updateOne({ product_id: id }, { $set: { amount: body.amount } });
-            }
-            if (body.amount > 0 && cart_item.amount == 0) {
-                await this.CartCollection.updateOne({ product_id: id }, { $set: { amount: 1 } });
-            }
+        if (body.amount <= 0) {
+            await this.CartCollection.updateMany({ product_id: id }, { $set: { amount: 0 } });
+        }
+        if (body.amount >= 1) {
+            await this.CartCollection.updateMany({ product_id: id, amount: { $gt: body.amount } }, { $set: { amount: body.amount } });
+            await this.CartCollection.updateMany({ product_id: id, amount: 0 }, { $set: { amount: 1 } });
         }
     }
     async del() { }
@@ -48,6 +46,7 @@ __decorate([
 ], ProductController.prototype, "list", null);
 __decorate([
     Post(),
+    WhoCanDoThat(Owner),
     UseTypeormDatasource({ entity: Product, realtime: true }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -55,6 +54,7 @@ __decorate([
 ], ProductController.prototype, "create", null);
 __decorate([
     Patch(':id'),
+    WhoCanDoThat(Owner),
     UseTypeormDatasource({ entity: Product, realtime: true }),
     __param(0, Body()),
     __param(1, Param('id')),

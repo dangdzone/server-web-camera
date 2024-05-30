@@ -86,13 +86,7 @@ export const Logged = ctx => {
     return !!ctx.req.user;
 };
 export const Owner = ctx => {
-    return ctx.req.user?.uid == ctx.req.params.id || ctx.req.user?.uid == ctx.req.params.staff_id || ctx.req.user?.uid == ctx.req.params.owner_id;
+    return ctx.req.user?.uid == ctx.req.params.id;
 };
-export const StoreOwner = ctx => {
-    return ctx.req.user?.$?.[ctx.req.params.restaurant_id]?.includes('owner') || ctx.req.user?.$?.[ctx.req.params.id]?.includes('owner');
-};
-export const StoreManager = ctx => {
-    return ctx.req.user?.$?.[ctx.req.params.restaurant_id]?.includes('manager') || ctx.req.user?.$?.[ctx.req.params.id]?.includes('manager');
-};
-export const RestaurantStaff = Or(Logged, Owner, StoreOwner, StoreManager);
+export const RestaurantStaff = Or(Logged, Owner);
 //# sourceMappingURL=Auth.js.map
