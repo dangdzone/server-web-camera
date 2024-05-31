@@ -22,12 +22,10 @@ export class ProductController {
     async list() { }
 
     @Post()
-    @WhoCanDoThat(Owner)
     @UseTypeormDatasource({ entity: Product, realtime: true })
     async create() { }
 
     @Patch(':id')
-    @WhoCanDoThat(Owner)
     @UseTypeormDatasource({ entity: Product, realtime: true })
     async patch(
         @Body() body: Product,

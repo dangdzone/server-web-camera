@@ -16,7 +16,6 @@ import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Product } from '../../../entities/Product.js';
 import { Cart } from '../../../entities/Cart.js';
-import { Owner, WhoCanDoThat } from '../guards/Auth.js';
 let ProductController = class ProductController {
     ProductCollection;
     CartCollection;
@@ -46,7 +45,6 @@ __decorate([
 ], ProductController.prototype, "list", null);
 __decorate([
     Post(),
-    WhoCanDoThat(Owner),
     UseTypeormDatasource({ entity: Product, realtime: true }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -54,7 +52,6 @@ __decorate([
 ], ProductController.prototype, "create", null);
 __decorate([
     Patch(':id'),
-    WhoCanDoThat(Owner),
     UseTypeormDatasource({ entity: Product, realtime: true }),
     __param(0, Body()),
     __param(1, Param('id')),
