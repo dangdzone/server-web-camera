@@ -99,8 +99,8 @@ export class MomoPayment {
         }
     }
 
+    // Xác thực chữ ký
     async verifyPayment({}: MomoResponse) {
-        // Xác thực chữ ký
 
         // Nếu hợp lệ => true
         return true
