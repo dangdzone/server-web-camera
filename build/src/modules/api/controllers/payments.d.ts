@@ -7,7 +7,7 @@ export declare class PaymentController {
     create(type: string, order_id: string): Promise<{
         data: {
             item: {
-                url: string;
+                url: any;
             };
         };
     }>;

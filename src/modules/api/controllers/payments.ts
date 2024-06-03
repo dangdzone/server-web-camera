@@ -7,6 +7,7 @@ import { Logged, WhoCanDoThat } from '../guards/Auth.js';
 import { MomoPayment, MomoResponse } from '../../../libs/MomoPayment.js';
 import { ObjectId } from 'mongodb';
 import { error } from 'console';
+import { ZaloPayment } from '../../../libs/ZaloPayment.js';
 
 @Controller('livequery') // Đơn hàng
 export class PaymentController {
@@ -54,6 +55,27 @@ export class PaymentController {
                 throw new Error('Lỗi, vui lòng thử lại')
             }
         }
+
+        if (type == 'zalopay') {
+            try {
+                const zalopay = new ZaloPayment
+                const paymentResponseZalo = await zalopay.createOrder({
+                    amount: order.pay,
+                    orderId: order.id.toString(),
+                    redirectUrl: `http://localhost:3000/cart/payment/${order_id}`
+                })
+                console.log(JSON.stringify(paymentResponseZalo, null, 2))
+                return {
+                    data: {
+                        item: {
+                            url: paymentResponseZalo.order_url
+                        }
+                    }
+                }
+            } catch (error) {
+                throw new Error('Lỗi, vui lòng thử lại')
+            }
+        }
     }
 
     @Post('webhooks/:type/~report')
@@ -70,6 +92,13 @@ export class PaymentController {
                     { $set: { status: 'paid' } }
                 )
             }
+        }
+        if (type == 'zalopay') {
+            // const zalopay = new ZaloPayment
+            await this.OrderCollection.updateOne(
+                { _id: new ObjectId(body.orderId) },
+                { $set: { status: 'paid' } }
+            )
         }
     }
 }

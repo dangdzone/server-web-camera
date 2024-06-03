@@ -8,17 +8,22 @@ export class ZaloPayment {
         key2: "trMrHtvjo6myautxDUiAcYsVtaeQ8nhf",
         endpoint: "https://sb-openapi.zalopay.vn/v2/create"
     };
-    async createOrder() {
-        const transID = Math.floor(Math.random() * 1000000);
+    async createOrder({ orderId, amount, redirectUrl }) {
+        const items = [{
+                orderId
+            }];
+        const embed_data = {
+            redirectUrl
+        };
         const order = {
             app_id: this.config.app_id,
-            app_trans_id: `${moment().format('YYMMDD')}_${transID}`,
-            app_user: "user123",
+            app_trans_id: `${moment().format('YYMMDD')}_${orderId}`,
+            app_user: orderId,
             app_time: Date.now(),
-            item: '[]',
-            embed_data: '{}',
-            amount: 50000,
-            description: `Payment for the order #${transID}`,
+            item: JSON.stringify(items),
+            embed_data: JSON.stringify(embed_data),
+            amount,
+            description: `Payment for the order #${orderId}`,
             bank_code: 'zalopayapp'
         };
         const raw_hash = ['app_id', 'app_trans_id', 'app_user', 'amount', 'app_time', 'embed_data', 'item'].map(v => order[v]).join('|');
@@ -26,12 +31,6 @@ export class ZaloPayment {
             .update(raw_hash)
             .digest('hex');
         const data = { ...order, mac };
-        console.log({
-            url: this.config.endpoint,
-            body: JSON.stringify(data),
-            mac,
-            raw_hash
-        });
         try {
             const response = await axios.post(this.config.endpoint, data);
             return response.data;
@@ -41,10 +40,4 @@ export class ZaloPayment {
         }
     }
 }
-const zalo = new ZaloPayment();
-zalo.createOrder().then((result) => {
-    console.log(result);
-}).catch((error) => {
-    console.error(error);
-});
 //# sourceMappingURL=ZaloPayment.js.map

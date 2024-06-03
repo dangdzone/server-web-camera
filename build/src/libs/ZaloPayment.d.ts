@@ -4,7 +4,16 @@ export type ZaloRequest = {
     user: string;
     description: string;
 };
+export type ZaloResponse = {
+    type: string;
+};
+interface Order {
+    redirectUrl: string;
+    orderId: string;
+    amount: number;
+}
 export declare class ZaloPayment {
     private readonly config;
-    createOrder(): Promise<any>;
+    createOrder({ orderId, amount, redirectUrl }: Order): Promise<any>;
 }
+export {};
