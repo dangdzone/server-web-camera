@@ -28,23 +28,23 @@ let PaymentController = class PaymentController {
         console.log({ type, order_id });
         const order = await this.OrderCollection.findOne({ where: { _id: new ObjectId(order_id) } });
         if (!order) {
-            throw new error('Không có đơn hàng nào');
+            throw new error('Không có đơn hàng nào !');
         }
         if (type == 'momo') {
             try {
                 const momo = new MomoPayment;
-                const paymentResponse = await momo.createPayment({
-                    amount: order.pay,
-                    ipnUrl: 'https://payments.flygo.vn/livequery/webhooks/momo/~report',
+                const responseMomoTransaction = await momo.createPayment({
                     orderId: order.id.toString(),
+                    amount: order.pay,
                     orderInfo: order.code,
-                    redirectUrl: `http://localhost:3000/cart/payment/${order_id}`
+                    redirectUrl: `http://localhost:3000/member/histories/${order_id}`,
+                    ipnUrl: 'https://payments.flygo.vn/livequery/webhooks/momo/~report',
                 });
-                console.log(JSON.stringify(paymentResponse, null, 2));
+                console.log(JSON.stringify(responseMomoTransaction, null, 2));
                 return {
                     data: {
                         item: {
-                            url: paymentResponse.payUrl
+                            url: responseMomoTransaction.payUrl
                         }
                     }
                 };
@@ -53,19 +53,20 @@ let PaymentController = class PaymentController {
                 throw new Error('Lỗi, vui lòng thử lại');
             }
         }
-        if (type == 'zalopay') {
+        if (type == 'zalo') {
             try {
                 const zalopay = new ZaloPayment;
-                const paymentResponseZalo = await zalopay.createOrder({
-                    amount: order.pay,
+                const responseZaloTransaction = await zalopay.createOrder({
                     orderId: order.id.toString(),
-                    redirectUrl: `http://localhost:3000/cart/payment/${order_id}`
+                    amount: order.pay,
+                    redirectUrl: `http://localhost:3000/member/histories/${order_id}`,
+                    callback_url: 'https://payments.flygo.vn/livequery/webhooks/zalo/~report',
                 });
-                console.log(JSON.stringify(paymentResponseZalo, null, 2));
+                console.log(JSON.stringify(responseZaloTransaction, null, 2));
                 return {
                     data: {
                         item: {
-                            url: paymentResponseZalo.order_url
+                            url: responseZaloTransaction.order_url
                         }
                     }
                 };
@@ -75,16 +76,20 @@ let PaymentController = class PaymentController {
             }
         }
     }
-    async momo_confirm_payment(body, type) {
+    async momo_confirm_payment(body) {
         console.log(JSON.stringify(body, null, 2));
-        if (type == 'momo') {
-            const momo = new MomoPayment;
-            if (await momo.verifyPayment(body)) {
-                await this.OrderCollection.updateOne({ _id: new ObjectId(body.orderId) }, { $set: { status: 'paid' } });
-            }
-        }
-        if (type == 'zalopay') {
+        const momo = new MomoPayment;
+        if (await momo.verifyMomoPayment(body)) {
             await this.OrderCollection.updateOne({ _id: new ObjectId(body.orderId) }, { $set: { status: 'paid' } });
+        }
+    }
+    async zalo_confirm_payment(body) {
+        console.log({ body });
+        const data = JSON.parse(body.data);
+        console.log({ data });
+        const zalo = new ZaloPayment;
+        if (await zalo.verifyZaloPayment(body)) {
+            await this.OrderCollection.updateOne({ _id: new ObjectId(data.app_user) }, { $set: { status: 'paid' } });
         }
     }
 };
@@ -98,13 +103,19 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PaymentController.prototype, "create", null);
 __decorate([
-    Post('webhooks/:type/~report'),
+    Post('webhooks/momo/~report'),
     __param(0, Body()),
-    __param(1, Param('type')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], PaymentController.prototype, "momo_confirm_payment", null);
+__decorate([
+    Post('webhooks/zalo/~report'),
+    __param(0, Body()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], PaymentController.prototype, "zalo_confirm_payment", null);
 PaymentController = __decorate([
     Controller('livequery'),
     __param(0, InjectRepository(Order)),

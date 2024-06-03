@@ -8,7 +8,7 @@ export class ZaloPayment {
         key2: "trMrHtvjo6myautxDUiAcYsVtaeQ8nhf",
         endpoint: "https://sb-openapi.zalopay.vn/v2/create"
     };
-    async createOrder({ orderId, amount, redirectUrl }) {
+    async createOrder({ orderId, amount, redirectUrl, callback_url }) {
         const items = [{
                 orderId
             }];
@@ -22,6 +22,7 @@ export class ZaloPayment {
             app_time: Date.now(),
             item: JSON.stringify(items),
             embed_data: JSON.stringify(embed_data),
+            callback_url,
             amount,
             description: `Payment for the order #${orderId}`,
             bank_code: 'zalopayapp'
@@ -38,6 +39,9 @@ export class ZaloPayment {
         catch (error) {
             throw new Error(`Failed to create order: ${error.message}`);
         }
+    }
+    async verifyZaloPayment({}) {
+        return true;
     }
 }
 //# sourceMappingURL=ZaloPayment.js.map

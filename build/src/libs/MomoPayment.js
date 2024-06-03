@@ -40,7 +40,7 @@ export class MomoPayment {
             throw new HttpException('MoMo payment failed', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    async verifyPayment({}) {
+    async verifyMomoPayment({}) {
         return true;
     }
 }

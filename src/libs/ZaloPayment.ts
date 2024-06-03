@@ -2,30 +2,28 @@ import axios from "axios";
 import * as crypto from 'crypto';
 import moment from "moment";
 
-export type ZaloRequest = {
-    transID: number,
-    amount: number,
-    user: string,
-    description: string
-}
-
-export type ZaloResponse = {
-    type: string
-}
-
-interface Order {
-    // app_id: string;
-    // app_trans_id: string;
-    // app_user: string;
-    // app_time: number;
-    // item: string;
-    // embed_data: string;
+export type CreateZaloTransaction = {
     redirectUrl: string
     orderId: string
     amount: number;
-    // description: string;
-    // bank_code: string;
-    // mac?: string;  // Khai báo thuộc tính mac là tùy chọn
+    callback_url: string
+}
+
+export type ResponseZaloTransaction = {
+    return_code: number // 1: Thành công 2: Thất bại
+    return_message: string // Mô tả mã trạng thái
+    sub_return_code: number // Mã trạng thái chi tiết
+    sub_return_message: string // 	Mô tả chi tiết mã trạng thái
+    order_url: string // 	Dùng để tạo QR code hoặc gọi chuyển tiếp sang trang cổng ZaloPay
+    zp_trans_token: string // 	Thông tin token đơn hàng
+    order_token: string // Thông tin token đơn hàng
+    qr_code: string // 	Dùng để tạo NAPAS VietQR trên hệ thống Merchant. NAPAS VietQR là một trong những giải pháp thanh toán hoàn toàn mới, chấp nhận thanh toán được thực hiện bởi cả ZaloPay & +40 ngân hàng thuộc hệ thống NAPAS. Người dùng có thể sử dụng ứng dụng ngân hàng quét NAPAS VietQR để thanh toán
+}
+
+export type ReportZaloTransaction = {
+    data: string //Dữ liệu giao dịch ZaloPay gọi về cho ứng dụng
+    mac: string // 	Thông tin chứng thực của đơn hàng, dùng Callback Key (Key2) được cung cấp để chứng thực đơn hàng
+    type: string // Loại callback => 1: Order, 2: Agreement
 }
 
 export class ZaloPayment {
@@ -37,7 +35,7 @@ export class ZaloPayment {
         endpoint: "https://sb-openapi.zalopay.vn/v2/create"
     }
 
-    async createOrder({ orderId, amount, redirectUrl }: Order) {
+    async createOrder({ orderId, amount, redirectUrl, callback_url }: CreateZaloTransaction) {
         // const transID = Math.floor(Math.random() * 1000000);
         const items = [{
             orderId
@@ -52,6 +50,7 @@ export class ZaloPayment {
             app_time: Date.now(), // milliseconds
             item: JSON.stringify(items),
             embed_data: JSON.stringify(embed_data),
+            callback_url,
             amount,
             description: `Payment for the order #${orderId}`,
             bank_code: 'zalopayapp'
@@ -69,53 +68,18 @@ export class ZaloPayment {
 
         try {
             const response = await axios.post(this.config.endpoint, data);
-            return response.data
+            return response.data as ResponseZaloTransaction
         } catch (error) {
             throw new Error(`Failed to create order: ${error.message}`);
         }
     }
 
     // Xác thực chữ ký
-    // async verifyPaymentZalo({ body }: any) {
-    //     const result: any = {}
-    //     // Nếu hợp lệ => true
-    //     const config = {
-    //         key2: "eG4r0GcoNtRGbO8"
-    //     };
+    async verifyZaloPayment({}: ReportZaloTransaction) {
+        return true
+    }
 
-    //     try {
-    //         const dataStr = body.data;
-    //         const reqMac = body.mac;
-
-    //         const mac = crypto.createHmac('sha256', config.key2)
-    //             .update(dataStr)
-    //             .digest('hex');
-
-    //         // kiểm tra callback hợp lệ (đến từ ZaloPay server)
-    //         if (reqMac !== mac) {
-    //             // callback không hợp lệ
-    //             result.return_code = -1;
-    //             result.return_message = 'mac not equal';
-    //         } else {
-    //             // thanh toán thành công
-    //             // merchant cập nhật trạng thái cho đơn hàng
-    //             const dataJson = JSON.parse(dataStr, config.key2);
-    //             console.log("update order's status = success where app_trans_id =", dataJson['app_trans_id']);
-
-    //             result.return_code = 1;
-    //             result.return_message = 'success';
-    //         }
-    //     } catch (ex) {
-    //         result.return_code = 0; // ZaloPay server sẽ callback lại (tối đa 3 lần)
-    //         result.return_message = ex.message;
-    //     }
-
-    //     // thông báo kết quả cho ZaloPay server
-    //     res.json(result);
-    // }
 }
-
-
 
 // const zalo = new ZaloPayment()
 // zalo.createOrder({

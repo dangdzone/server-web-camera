@@ -2,49 +2,49 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import axios from 'axios';
 import * as crypto from 'crypto';
 
-export type MomoTransaction = {
-    /** Mã đối tác */
-    // partnerCode: string
-    /** ID gửi đi */
-    // requestId: string
+// Tạo giao dịch
+export type CreateMomoTransaction = {
     /** Số lượng */
     amount: number
-    /** ID đơn hàng */
-    orderId: string
-    /** Thông tin đơn hàng */
-    orderInfo: string
-    /** Dữ liệu bổ sung */
-    // extraData: string
-    /** Mã hóa */
-    // signature: string
-}
-
-export type MomoRequest = MomoTransaction & {
-    /** Khóa xác thực */
-    // accessKey: string
     /** URL chuyển hướng */
     redirectUrl: string
     /** URL trả dữ liệu */
     ipnUrl: string
-    /** Kiểu request */
-    // requestType: string
-    /** Ngôn ngữ */
-    // lang: string
+    /** ID đơn hàng */
+    orderId: string
+    /** Thông tin đơn hàng */
+    orderInfo: string
 }
 
-export type MomoResponse = MomoTransaction & {
-    /** Kiểu đơn hàng */
-    orderType: string
-    /** ID chuyển đổi */
-    transId: string
-    /** Kết quả đơn hàng */
-    resultCode: number
-    /** Nội dung tin nhắn */
-    message: string
-    /** Loạt thanh toán */
-    payType: string
-    /** Thời gian trả về */
-    responseTime: number
+// Phản hồi khi tạo giao dịch 
+export type ResponseMomoTransaction = {
+    partnerCode: string, // "MOMO"
+    orderId: string // "665de4319759abf9b20e53ce"
+    requestId: string // "MOMO1717429333063"
+    amount: number // 11000
+    responseTime: number // 1717429337735
+    message: string // "Thành công."
+    resultCode: number // 0
+    payUrl: string //  "https://test-payment.momo.vn/v2/gateway/pay?t=TU9NT3w2NjVkZTQzMTk3NTlhYmY5YjIwZTUzY2U&s=6d9b1cd0402962b5fb8e44d9ae458045a1b9389c9fb26b0b6c778eaa37579bce"
+    deeplink: string // "momo://app?action=payWithApp&isScanQR=false&serviceType=app&sid=TU9NT3w2NjVkZTQzMTk3NTlhYmY5YjIwZTUzY2U&v=3.0"
+    qrCodeUrl: string // "momo://app?action=payWithApp&isScanQR=true&serviceType=qr&sid=TU9NT3w2NjVkZTQzMTk3NTlhYmY5YjIwZTUzY2U&v=3.0"
+}
+
+// Thông báo giao dịch
+export type ReportMomoTransaction = {
+    partnerCode: string //  "MOMO"
+    orderId: string // "665dd4166824847248669413"
+    requestId: string // "MOMO1717425177440"
+    amount: number // 10000
+    orderInfo: string // "FG1717425174851"
+    orderType: string // "momo_wallet"
+    transId: string // 4052713263
+    resultCode: number // 0
+    message: string // "Thành công"
+    payType: string // "qr"
+    responseTime: number // 1717425231813
+    extraData: string // ""
+    signature: string // "a17eda3afd2f23f4cfe4573eccef0989c5dd609650d0bf04e3aac7b9dc9a1f40"
 }
 
 export class MomoPayment {
@@ -53,7 +53,7 @@ export class MomoPayment {
     private readonly accessKey = 'F8BBA842ECF85'
     private readonly secretkey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz'
 
-    async createPayment({ amount, ipnUrl, orderId, orderInfo, redirectUrl }: MomoRequest) {
+    async createPayment({ amount, ipnUrl, orderId, orderInfo, redirectUrl }: CreateMomoTransaction) {
 
         const extraData = ''
         const requestType = "captureWallet"
@@ -86,21 +86,14 @@ export class MomoPayment {
                     'Content-Length': Buffer.byteLength(requestBody)
                 }
             });
-            return response.data as {
-                payUrl: string
-                deeplink: string
-                qrCodeUrl: string
-                resultCode: number
-                responseTime: number
-                message: string
-            };
+            return response.data as ResponseMomoTransaction
         } catch (error) {
             throw new HttpException('MoMo payment failed', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     // Xác thực chữ ký
-    async verifyPayment({}: MomoResponse) {
+    async verifyMomoPayment({ }: ReportMomoTransaction) {
 
         // Nếu hợp lệ => true
         return true
