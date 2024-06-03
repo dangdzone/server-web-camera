@@ -9,7 +9,7 @@ import { ObjectId } from 'mongodb';
 import { error } from 'console';
 
 @Controller('livequery') // Đơn hàng
-export class MomoController {
+export class PaymentController {
 
     constructor(
         @InjectRepository(Order) private OrderCollection: MongoRepository<Order>,

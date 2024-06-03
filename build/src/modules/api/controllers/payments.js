@@ -18,7 +18,7 @@ import { Logged, WhoCanDoThat } from '../guards/Auth.js';
 import { MomoPayment } from '../../../libs/MomoPayment.js';
 import { ObjectId } from 'mongodb';
 import { error } from 'console';
-let MomoController = class MomoController {
+let PaymentController = class PaymentController {
     OrderCollection;
     constructor(OrderCollection) {
         this.OrderCollection = OrderCollection;
@@ -71,7 +71,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
-], MomoController.prototype, "create", null);
+], PaymentController.prototype, "create", null);
 __decorate([
     Post('webhooks/:type/~report'),
     __param(0, Body()),
@@ -79,11 +79,11 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
-], MomoController.prototype, "momo_confirm_payment", null);
-MomoController = __decorate([
+], PaymentController.prototype, "momo_confirm_payment", null);
+PaymentController = __decorate([
     Controller('livequery'),
     __param(0, InjectRepository(Order)),
     __metadata("design:paramtypes", [MongoRepository])
-], MomoController);
-export { MomoController };
+], PaymentController);
+export { PaymentController };
 //# sourceMappingURL=payments.js.map

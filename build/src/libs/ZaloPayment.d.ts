@@ -6,5 +6,5 @@ export type ZaloRequest = {
 };
 export declare class ZaloPayment {
     private readonly config;
-    createPayment({}: ZaloRequest): Promise<void>;
+    createOrder(): Promise<any>;
 }
