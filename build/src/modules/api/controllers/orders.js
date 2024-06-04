@@ -24,9 +24,7 @@ let OrderController = class OrderController {
         this.OrderCollection = OrderCollection;
         this.CartCollection = CartCollection;
     }
-    async listALL() {
-        console.log('Tất cả');
-    }
+    async listALL() { }
     async listCustomer() { }
     async create() {
         await this.CartCollection.deleteMany({ select: true });

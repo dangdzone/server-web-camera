@@ -19,6 +19,7 @@ let Order = class Order extends BaseEntity {
     pay;
     shipping_fee;
     customer_id;
+    customer_info;
     receiver_info;
 };
 __decorate([
@@ -57,6 +58,10 @@ __decorate([
     Column(),
     __metadata("design:type", String)
 ], Order.prototype, "customer_id", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", Object)
+], Order.prototype, "customer_info", void 0);
 __decorate([
     Column(),
     __metadata("design:type", Object)

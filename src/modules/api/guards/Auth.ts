@@ -100,7 +100,7 @@ export const Logged: AllowCondition = ctx => {
 
 // Chủ của tài nguyên / thực thể tương ứng (VD: người tạo đơn hàng)
 export const Owner: AllowCondition = ctx => {
-    return ctx.req.user?.uid == ctx.req.params.id // Chi tiết thông tin của người đó
+    return ctx.req.user?.uid == ctx.req.params.id || ctx.req.user?.uid == ctx.req.params.owner_id // Chi tiết thông tin của người đó
 }
 
 export const RestaurantStaff: AllowCondition = Or(

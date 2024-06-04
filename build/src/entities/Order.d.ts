@@ -13,6 +13,11 @@ export declare class Order extends BaseEntity {
     pay: number;
     shipping_fee: number;
     customer_id: string;
+    customer_info: {
+        name: string;
+        email: string;
+        img: string;
+    };
     receiver_info: {
         receiver_name: string;
         receiver_phone: number;

@@ -34,6 +34,13 @@ export class Order extends BaseEntity {
 
     @Column()
     customer_id: string // Thông tin khách hàng
+    
+    @Column()
+    customer_info: { // Thông tin khách hàng tạo
+        name: string,
+        email: string,
+        img: string
+    }
 
     @Column()
     receiver_info: {

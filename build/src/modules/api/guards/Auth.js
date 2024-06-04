@@ -86,7 +86,7 @@ export const Logged = ctx => {
     return !!ctx.req.user;
 };
 export const Owner = ctx => {
-    return ctx.req.user?.uid == ctx.req.params.id;
+    return ctx.req.user?.uid == ctx.req.params.id || ctx.req.user?.uid == ctx.req.params.owner_id;
 };
 export const RestaurantStaff = Or(Logged, Owner);
 //# sourceMappingURL=Auth.js.map

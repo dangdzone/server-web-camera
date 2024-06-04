@@ -19,9 +19,7 @@ export class OrderController {
     // Orders of all customers
     @Get(['orders', ':id'])
     @UseTypeormDatasource({ entity: Order, realtime: true })
-    async listALL() {
-        console.log('Tất cả')
-    }
+    async listALL() { }
 
     // Orders of 1 customers
     @Get(['customers/:customer_id/orders', 'customers/:customer_id/orders/:id'])
