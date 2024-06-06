@@ -46,10 +46,10 @@ export class Order extends BaseEntity {
     receiver_info: {
         receiver_name: string // Tên người nhận
         receiver_phone: number // sdt người nhận
-        province: number // Tỉnh
+        province: number | string // Tỉnh
         district: number // huyện
-        ward: number // Phường, xã
-        street: number // Số nhà, tên đường
+        ward: number | string // Phường, xã
+        street: number | string // Số nhà, tên đường
         note: string // ghi chú
     }
 }

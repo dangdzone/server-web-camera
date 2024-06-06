@@ -21,10 +21,10 @@ export declare class Order extends BaseEntity {
     receiver_info: {
         receiver_name: string;
         receiver_phone: number;
-        province: number;
+        province: number | string;
         district: number;
-        ward: number;
-        street: number;
+        ward: number | string;
+        street: number | string;
         note: string;
     };
 }
