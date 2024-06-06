@@ -11,7 +11,10 @@ import { Column, Entity } from "typeorm";
 import { BaseEntity } from "./BaseEntity.js";
 let Store = class Store extends BaseEntity {
     name;
-    address;
+    province;
+    district;
+    ward;
+    street;
     link_map;
 };
 __decorate([
@@ -20,8 +23,20 @@ __decorate([
 ], Store.prototype, "name", void 0);
 __decorate([
     Column(),
-    __metadata("design:type", String)
-], Store.prototype, "address", void 0);
+    __metadata("design:type", Object)
+], Store.prototype, "province", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", Object)
+], Store.prototype, "district", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", Object)
+], Store.prototype, "ward", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", Object)
+], Store.prototype, "street", void 0);
 __decorate([
     Column(),
     __metadata("design:type", String)
