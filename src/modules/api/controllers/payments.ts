@@ -41,9 +41,8 @@ export class PaymentController {
                     orderId: order.id.toString(),
                     amount: order.pay,
                     orderInfo: order.code,
-                    redirectUrl: `http://localhost:3000/member/histories/${order_id}`,
-                    ipnUrl: 'https://payments.flygo.vn/livequery/webhooks/momo/~report',
-                    // ipnUrl: 'http://localhost:8080/livequery/webhooks/momo/~report',
+                    redirectUrl: `https://flygo.dangdzone.site/member/histories/${order_id}`,
+                    ipnUrl: 'https://sv.dangdzone.site/livequery/webhooks/momo/~report',
                 })
                 // console.log(JSON.stringify(responseMomoTransaction, null, 2))
                 return {
@@ -64,9 +63,8 @@ export class PaymentController {
                 const responseZaloTransaction = await zalopay.createOrder({
                     orderId: order.id.toString(),
                     amount: order.pay,
-                    redirectUrl: `http://localhost:3000/member/histories/${order_id}`,
-                    callback_url: 'https://payments.flygo.vn/livequery/webhooks/zalo/~report',
-                    // callback_url: 'http://localhost:8080/livequery/webhooks/zalo/~report'
+                    redirectUrl: `https://flygo.dangdzone.site/member/histories/${order_id}`,
+                    callback_url: 'https://sv.dangdzone.site/livequery/webhooks/zalo/~report',
                 })
                 // console.log(JSON.stringify(responseZaloTransaction, null, 2))
                 return {
@@ -88,7 +86,7 @@ export class PaymentController {
                     amount: order.pay,
                     description: order.id.toString(),
                     invoice_no: order.id.toString(),
-                    return_url: `http://localhost:8080/livequery/webhooks/9pay/~report`,
+                    return_url: `https://sv.dangdzone.site/livequery/webhooks/9pay/~report`,
                 })
                 // console.log(JSON.stringify(responseNineTransaction, null, 2))
                 // console.log({responseNineTransaction})
@@ -162,7 +160,7 @@ export class PaymentController {
         }
 
         return {
-            url: `http://localhost:3000/member/histories/${orderId.invoice_no}`
+            url: `https://flygo.dangdzone.site/member/histories/${orderId.invoice_no}`
         }
 
     }
