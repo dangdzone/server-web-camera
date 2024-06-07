@@ -37,5 +37,5 @@ export declare class MomoPayment {
     private readonly accessKey;
     private readonly secretkey;
     createPayment({ amount, ipnUrl, orderId, orderInfo, redirectUrl }: CreateMomoTransaction): Promise<ResponseMomoTransaction>;
-    verifyMomoPayment({}: ReportMomoTransaction): Promise<boolean>;
+    verifyMomoPayment(report: ReportMomoTransaction): Promise<boolean>;
 }

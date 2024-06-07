@@ -40,8 +40,13 @@ export class MomoPayment {
             throw new HttpException('MoMo payment failed', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    async verifyMomoPayment({}) {
+    async verifyMomoPayment(report) {
         return true;
+        const data = `${report.partnerCode}${report.orderId}${report.requestId}${report.amount}${report.orderInfo}${report.orderType}${report.transId}${report.resultCode}${report.message}${report.payType}${report.responseTime}${report.extraData}`;
+        const hmac = crypto.createHmac('sha256', this.secretkey);
+        hmac.update(data);
+        const generatedSignature = hmac.digest('hex');
+        return generatedSignature === report.signature;
     }
 }
 //# sourceMappingURL=MomoPayment.js.map

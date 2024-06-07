@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Redirect } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { Order } from '../../../entities/Order.js';
@@ -19,6 +19,7 @@ import { MomoPayment } from '../../../libs/MomoPayment.js';
 import { ObjectId } from 'mongodb';
 import { error } from 'console';
 import { ZaloPayment } from '../../../libs/ZaloPayment.js';
+import { NinePayment } from '../../../libs/NinePayment.js';
 let PaymentController = class PaymentController {
     OrderCollection;
     constructor(OrderCollection) {
@@ -75,6 +76,29 @@ let PaymentController = class PaymentController {
                 throw new Error('Lỗi, vui lòng thử lại');
             }
         }
+        if (type = 'ninepay') {
+            try {
+                const ninepay = new NinePayment;
+                const responseNineTransaction = await ninepay.createPayment({
+                    amount: order.pay,
+                    description: order.id.toString(),
+                    invoice_no: order.id.toString(),
+                    return_url: `http://localhost:8080/livequery/webhooks/9pay/~report`,
+                });
+                console.log(JSON.stringify(responseNineTransaction, null, 2));
+                console.log({ responseNineTransaction });
+                return {
+                    data: {
+                        item: {
+                            url: responseNineTransaction.payUrl
+                        }
+                    }
+                };
+            }
+            catch (error) {
+                throw new Error('Lỗi, vui lòng thử lại');
+            }
+        }
     }
     async momo_confirm_payment(body) {
         console.log(JSON.stringify(body, null, 2));
@@ -91,6 +115,17 @@ let PaymentController = class PaymentController {
         if (await zalo.verifyZaloPayment(body)) {
             await this.OrderCollection.updateOne({ _id: new ObjectId(data.app_user) }, { $set: { status: 'paid' } });
         }
+    }
+    async pay_9_confirm_payment(body) {
+        const ninepay = new NinePayment;
+        const info_pay = await ninepay.verifyNinePayment(body);
+        const orderId = JSON.parse(info_pay.decodedResult);
+        if (info_pay.isValidChecksum) {
+            await this.OrderCollection.updateOne({ _id: new ObjectId(orderId.invoice_no) }, { $set: { status: 'paid' } });
+        }
+        return {
+            url: `http://localhost:3000/member/histories/${orderId.invoice_no}`
+        };
     }
 };
 __decorate([
@@ -116,6 +151,14 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], PaymentController.prototype, "zalo_confirm_payment", null);
+__decorate([
+    Redirect(),
+    Get('webhooks/9pay/~report'),
+    __param(0, Query()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], PaymentController.prototype, "pay_9_confirm_payment", null);
 PaymentController = __decorate([
     Controller('livequery'),
     __param(0, InjectRepository(Order)),

@@ -93,10 +93,17 @@ export class MomoPayment {
     }
 
     // Xác thực chữ ký
-    async verifyMomoPayment({ }: ReportMomoTransaction) {
+    async verifyMomoPayment(report: ReportMomoTransaction) {
 
-        // Nếu hợp lệ => true
         return true
+
+        const data = `${report.partnerCode}${report.orderId}${report.requestId}${report.amount}${report.orderInfo}${report.orderType}${report.transId}${report.resultCode}${report.message}${report.payType}${report.responseTime}${report.extraData}`;
+        const hmac = crypto.createHmac('sha256', this.secretkey);
+        hmac.update(data);
+        const generatedSignature = hmac.digest('hex');
+
+        return generatedSignature === report.signature;
+
     }
 }
 

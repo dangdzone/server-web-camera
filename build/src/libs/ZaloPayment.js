@@ -40,7 +40,7 @@ export class ZaloPayment {
             throw new Error(`Failed to create order: ${error.message}`);
         }
     }
-    async verifyZaloPayment({}) {
+    async verifyZaloPayment(report) {
         return true;
     }
 }

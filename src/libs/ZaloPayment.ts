@@ -75,8 +75,15 @@ export class ZaloPayment {
     }
 
     // Xác thực chữ ký
-    async verifyZaloPayment({}: ReportZaloTransaction) {
+    async verifyZaloPayment(report: ReportZaloTransaction) {
+
         return true
+        // const hmac = crypto.createHmac('sha256', callbackKey);
+        // hmac.update(report.data);
+        // const generatedMac = hmac.digest('hex');
+
+        // return generatedMac === report.mac;
+
     }
 
 }

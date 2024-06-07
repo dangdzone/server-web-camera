@@ -22,5 +22,5 @@ export type ReportZaloTransaction = {
 export declare class ZaloPayment {
     private readonly config;
     createOrder({ orderId, amount, redirectUrl, callback_url }: CreateZaloTransaction): Promise<ResponseZaloTransaction>;
-    verifyZaloPayment({}: ReportZaloTransaction): Promise<boolean>;
+    verifyZaloPayment(report: ReportZaloTransaction): Promise<boolean>;
 }

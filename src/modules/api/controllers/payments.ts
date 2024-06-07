@@ -1,5 +1,5 @@
 
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Redirect } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { Order } from '../../../entities/Order.js';
@@ -8,6 +8,7 @@ import { MomoPayment, ReportMomoTransaction } from '../../../libs/MomoPayment.js
 import { ObjectId } from 'mongodb';
 import { error } from 'console';
 import { ReportZaloTransaction, ZaloPayment } from '../../../libs/ZaloPayment.js';
+import { NinePayment, ReportNinePayTransaction } from '../../../libs/NinePayment.js';
 
 @Controller('livequery') // Đơn hàng
 export class PaymentController {
@@ -79,6 +80,29 @@ export class PaymentController {
                 throw new Error('Lỗi, vui lòng thử lại')
             }
         }
+
+        if (type = 'ninepay') {
+            try {
+                const ninepay = new NinePayment
+                const responseNineTransaction = await ninepay.createPayment({
+                    amount: order.pay,
+                    description: order.id.toString(),
+                    invoice_no: order.id.toString(),
+                    return_url: `http://localhost:8080/livequery/webhooks/9pay/~report`,
+                })
+                console.log(JSON.stringify(responseNineTransaction, null, 2))
+                console.log({responseNineTransaction})
+                return {
+                    data: {
+                        item: {
+                            url: responseNineTransaction.payUrl
+                        }
+                    }
+                }
+            } catch (error) {
+                throw new Error('Lỗi, vui lòng thử lại')
+            }
+        }
     }
 
     @Post('webhooks/momo/~report')
@@ -104,7 +128,7 @@ export class PaymentController {
     ) {
 
         // console.log(JSON.stringify(body, null, 2))
-        console.log({body})
+        console.log({ body })
         const data = JSON.parse(body.data)
         console.log({ data })
 
@@ -116,5 +140,30 @@ export class PaymentController {
                 { $set: { status: 'paid' } }
             )
         }
+    }
+
+    @Redirect()
+    @Get('webhooks/9pay/~report')
+    async pay_9_confirm_payment(
+        @Query() body: ReportNinePayTransaction,
+    ) {
+        
+        const ninepay = new NinePayment
+        const info_pay = await ninepay.verifyNinePayment(body)
+        const orderId = JSON.parse(info_pay.decodedResult)
+
+        if(info_pay.isValidChecksum) {
+
+            await this.OrderCollection.updateOne(
+                { _id: new ObjectId(orderId.invoice_no) },
+                { $set: { status: 'paid' } }
+            )
+            
+        }
+
+        return {
+            url: `http://localhost:3000/member/histories/${orderId.invoice_no}`
+        }
+
     }
 }
