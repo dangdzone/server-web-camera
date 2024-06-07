@@ -26,7 +26,6 @@ let PaymentController = class PaymentController {
         this.OrderCollection = OrderCollection;
     }
     async create(type, order_id) {
-        console.log({ type, order_id });
         const order = await this.OrderCollection.findOne({ where: { _id: new ObjectId(order_id) } });
         if (!order) {
             throw new error('Không có đơn hàng nào !');
@@ -41,7 +40,6 @@ let PaymentController = class PaymentController {
                     redirectUrl: `http://localhost:3000/member/histories/${order_id}`,
                     ipnUrl: 'https://payments.flygo.vn/livequery/webhooks/momo/~report',
                 });
-                console.log(JSON.stringify(responseMomoTransaction, null, 2));
                 return {
                     data: {
                         item: {
@@ -63,7 +61,6 @@ let PaymentController = class PaymentController {
                     redirectUrl: `http://localhost:3000/member/histories/${order_id}`,
                     callback_url: 'https://payments.flygo.vn/livequery/webhooks/zalo/~report',
                 });
-                console.log(JSON.stringify(responseZaloTransaction, null, 2));
                 return {
                     data: {
                         item: {
@@ -85,8 +82,6 @@ let PaymentController = class PaymentController {
                     invoice_no: order.id.toString(),
                     return_url: `http://localhost:8080/livequery/webhooks/9pay/~report`,
                 });
-                console.log(JSON.stringify(responseNineTransaction, null, 2));
-                console.log({ responseNineTransaction });
                 return {
                     data: {
                         item: {
@@ -101,16 +96,13 @@ let PaymentController = class PaymentController {
         }
     }
     async momo_confirm_payment(body) {
-        console.log(JSON.stringify(body, null, 2));
         const momo = new MomoPayment;
         if (await momo.verifyMomoPayment(body)) {
             await this.OrderCollection.updateOne({ _id: new ObjectId(body.orderId) }, { $set: { status: 'paid' } });
         }
     }
     async zalo_confirm_payment(body) {
-        console.log({ body });
         const data = JSON.parse(body.data);
-        console.log({ data });
         const zalo = new ZaloPayment;
         if (await zalo.verifyZaloPayment(body)) {
             await this.OrderCollection.updateOne({ _id: new ObjectId(data.app_user) }, { $set: { status: 'paid' } });

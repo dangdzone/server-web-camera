@@ -25,7 +25,7 @@ export class PaymentController {
         @Param('id') order_id: string
     ) {
 
-        console.log({ type, order_id })
+        // console.log({ type, order_id })
         const order = await this.OrderCollection.findOne(
             { where: { _id: new ObjectId(order_id) } }
         )
@@ -45,7 +45,7 @@ export class PaymentController {
                     ipnUrl: 'https://payments.flygo.vn/livequery/webhooks/momo/~report',
                     // ipnUrl: 'http://localhost:8080/livequery/webhooks/momo/~report',
                 })
-                console.log(JSON.stringify(responseMomoTransaction, null, 2))
+                // console.log(JSON.stringify(responseMomoTransaction, null, 2))
                 return {
                     data: {
                         item: {
@@ -68,7 +68,7 @@ export class PaymentController {
                     callback_url: 'https://payments.flygo.vn/livequery/webhooks/zalo/~report',
                     // callback_url: 'http://localhost:8080/livequery/webhooks/zalo/~report'
                 })
-                console.log(JSON.stringify(responseZaloTransaction, null, 2))
+                // console.log(JSON.stringify(responseZaloTransaction, null, 2))
                 return {
                     data: {
                         item: {
@@ -90,8 +90,8 @@ export class PaymentController {
                     invoice_no: order.id.toString(),
                     return_url: `http://localhost:8080/livequery/webhooks/9pay/~report`,
                 })
-                console.log(JSON.stringify(responseNineTransaction, null, 2))
-                console.log({responseNineTransaction})
+                // console.log(JSON.stringify(responseNineTransaction, null, 2))
+                // console.log({responseNineTransaction})
                 return {
                     data: {
                         item: {
@@ -111,7 +111,7 @@ export class PaymentController {
         // @Param('type') type: string
     ) {
 
-        console.log(JSON.stringify(body, null, 2))
+        // console.log(JSON.stringify(body, null, 2))
 
         const momo = new MomoPayment
         if (await momo.verifyMomoPayment(body)) {
@@ -128,9 +128,9 @@ export class PaymentController {
     ) {
 
         // console.log(JSON.stringify(body, null, 2))
-        console.log({ body })
+        // console.log({ body })
         const data = JSON.parse(body.data)
-        console.log({ data })
+        // console.log({ data })
 
         const zalo = new ZaloPayment
 
