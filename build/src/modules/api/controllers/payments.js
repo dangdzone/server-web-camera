@@ -38,7 +38,7 @@ let PaymentController = class PaymentController {
                     amount: order.pay,
                     orderInfo: order.code,
                     redirectUrl: `https://flygo.dangdzone.site/member/histories/${order_id}`,
-                    ipnUrl: 'https://sv.dangdzone.site/livequery/webhooks/momo/~report',
+                    ipnUrl: 'https://api.dangdzone.site/livequery/webhooks/momo/~report',
                 });
                 return {
                     data: {
@@ -59,7 +59,7 @@ let PaymentController = class PaymentController {
                     orderId: order.id.toString(),
                     amount: order.pay,
                     redirectUrl: `https://flygo.dangdzone.site/member/histories/${order_id}`,
-                    callback_url: 'https://sv.dangdzone.site/livequery/webhooks/zalo/~report',
+                    callback_url: 'https://api.dangdzone.site/livequery/webhooks/zalo/~report',
                 });
                 return {
                     data: {
@@ -80,7 +80,7 @@ let PaymentController = class PaymentController {
                     amount: order.pay,
                     description: order.id.toString(),
                     invoice_no: order.id.toString(),
-                    return_url: `https://sv.dangdzone.site/livequery/webhooks/9pay/~report`,
+                    return_url: `https://api.dangdzone.site/livequery/webhooks/9pay/~report`,
                 });
                 return {
                     data: {
@@ -96,28 +96,52 @@ let PaymentController = class PaymentController {
         }
     }
     async momo_confirm_payment(body) {
-        const momo = new MomoPayment;
-        if (await momo.verifyMomoPayment(body)) {
-            await this.OrderCollection.updateOne({ _id: new ObjectId(body.orderId) }, { $set: { status: 'paid' } });
+        if (body.resultCode == 0) {
+            const momo = new MomoPayment;
+            if (await momo.verifyMomoPayment(body)) {
+                await this.OrderCollection.updateOne({ _id: new ObjectId(body.orderId) }, { $set: { status: 'paid' } });
+            }
+            else {
+                throw new Error('Xác thực thất bại');
+            }
+        }
+        else {
+            throw new Error('Lỗi ! Thanh toán thất bại');
         }
     }
     async zalo_confirm_payment(body) {
         const data = JSON.parse(body.data);
-        const zalo = new ZaloPayment;
-        if (await zalo.verifyZaloPayment(body)) {
-            await this.OrderCollection.updateOne({ _id: new ObjectId(data.app_user) }, { $set: { status: 'paid' } });
+        if (data.return_code == 1) {
+            const zalo = new ZaloPayment;
+            if (await zalo.verifyZaloPayment(body)) {
+                await this.OrderCollection.updateOne({ _id: new ObjectId(data.app_user) }, { $set: { status: 'paid' } });
+            }
+            else {
+                throw new Error('Xác thực thất bại');
+            }
+        }
+        else {
+            throw new Error('Lỗi ! Thanh toán thất bại');
         }
     }
     async pay_9_confirm_payment(body) {
         const ninepay = new NinePayment;
         const info_pay = await ninepay.verifyNinePayment(body);
         const orderId = JSON.parse(info_pay.decodedResult);
-        if (info_pay.isValidChecksum) {
-            await this.OrderCollection.updateOne({ _id: new ObjectId(orderId.invoice_no) }, { $set: { status: 'paid' } });
+        if (orderId.status == 2) {
+            if (info_pay.isValidChecksum) {
+                await this.OrderCollection.updateOne({ _id: new ObjectId(orderId.invoice_no) }, { $set: { status: 'paid' } });
+                return {
+                    url: `https://flygo.dangdzone.site/member/histories/${orderId.invoice_no}`
+                };
+            }
+            else {
+                throw new Error('Xác thực thất bại');
+            }
         }
-        return {
-            url: `https://flygo.dangdzone.site/member/histories/${orderId.invoice_no}`
-        };
+        else {
+            throw new Error('Lỗi ! Thanh toán thất bại');
+        }
     }
 };
 __decorate([

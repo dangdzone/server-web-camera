@@ -42,7 +42,7 @@ export class PaymentController {
                     amount: order.pay,
                     orderInfo: order.code,
                     redirectUrl: `https://flygo.dangdzone.site/member/histories/${order_id}`,
-                    ipnUrl: 'https://sv.dangdzone.site/livequery/webhooks/momo/~report',
+                    ipnUrl: 'https://api.dangdzone.site/livequery/webhooks/momo/~report',
                 })
                 // console.log(JSON.stringify(responseMomoTransaction, null, 2))
                 return {
@@ -64,7 +64,7 @@ export class PaymentController {
                     orderId: order.id.toString(),
                     amount: order.pay,
                     redirectUrl: `https://flygo.dangdzone.site/member/histories/${order_id}`,
-                    callback_url: 'https://sv.dangdzone.site/livequery/webhooks/zalo/~report',
+                    callback_url: 'https://api.dangdzone.site/livequery/webhooks/zalo/~report',
                 })
                 // console.log(JSON.stringify(responseZaloTransaction, null, 2))
                 return {
@@ -86,7 +86,7 @@ export class PaymentController {
                     amount: order.pay,
                     description: order.id.toString(),
                     invoice_no: order.id.toString(),
-                    return_url: `https://sv.dangdzone.site/livequery/webhooks/9pay/~report`,
+                    return_url: `https://api.dangdzone.site/livequery/webhooks/9pay/~report`,
                 })
                 // console.log(JSON.stringify(responseNineTransaction, null, 2))
                 // console.log({responseNineTransaction})
@@ -111,13 +111,20 @@ export class PaymentController {
 
         // console.log(JSON.stringify(body, null, 2))
 
-        const momo = new MomoPayment
-        if (await momo.verifyMomoPayment(body)) {
-            await this.OrderCollection.updateOne(
-                { _id: new ObjectId(body.orderId) },
-                { $set: { status: 'paid' } }
-            )
+        if (body.resultCode == 0) {
+            const momo = new MomoPayment
+            if (await momo.verifyMomoPayment(body)) {
+                await this.OrderCollection.updateOne(
+                    { _id: new ObjectId(body.orderId) },
+                    { $set: { status: 'paid' } }
+                )
+            } else {
+                throw new Error('Xác thực thất bại')
+            }
+        } else {
+            throw new Error('Lỗi ! Thanh toán thất bại')
         }
+
     }
 
     @Post('webhooks/zalo/~report')
@@ -126,18 +133,23 @@ export class PaymentController {
     ) {
 
         // console.log(JSON.stringify(body, null, 2))
-        // console.log({ body })
         const data = JSON.parse(body.data)
         // console.log({ data })
 
-        const zalo = new ZaloPayment
-
-        if (await zalo.verifyZaloPayment(body)) {
-            await this.OrderCollection.updateOne(
-                { _id: new ObjectId(data.app_user) },
-                { $set: { status: 'paid' } }
-            )
+        if (data.return_code == 1) {
+            const zalo = new ZaloPayment
+            if (await zalo.verifyZaloPayment(body)) {
+                await this.OrderCollection.updateOne(
+                    { _id: new ObjectId(data.app_user) },
+                    { $set: { status: 'paid' } }
+                )
+            } else {
+                throw new Error('Xác thực thất bại')
+            }
+        } else {
+            throw new Error('Lỗi ! Thanh toán thất bại')
         }
+
     }
 
     @Redirect()
@@ -145,23 +157,30 @@ export class PaymentController {
     async pay_9_confirm_payment(
         @Query() body: ReportNinePayTransaction,
     ) {
-        
+
         const ninepay = new NinePayment
         const info_pay = await ninepay.verifyNinePayment(body)
         const orderId = JSON.parse(info_pay.decodedResult)
 
-        if(info_pay.isValidChecksum) {
+        if (orderId.status == 2) {
 
-            await this.OrderCollection.updateOne(
-                { _id: new ObjectId(orderId.invoice_no) },
-                { $set: { status: 'paid' } }
-            )
-            
+            if (info_pay.isValidChecksum) {
+                await this.OrderCollection.updateOne(
+                    { _id: new ObjectId(orderId.invoice_no) },
+                    { $set: { status: 'paid' } }
+                )
+                return {
+                    url: `https://flygo.dangdzone.site/member/histories/${orderId.invoice_no}`
+                }
+
+            } else {
+                throw new Error('Xác thực thất bại')
+            }
+
+        } else {
+            throw new Error('Lỗi ! Thanh toán thất bại')
         }
 
-        return {
-            url: `https://flygo.dangdzone.site/member/histories/${orderId.invoice_no}`
-        }
 
     }
 }
