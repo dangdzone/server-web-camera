@@ -1,6 +1,8 @@
 import axios from "axios";
 import * as crypto from 'crypto';
+import e from "express";
 import moment from "moment";
+import * as qs from 'qs';
 
 export type CreateZaloTransaction = {
     redirectUrl: string
@@ -24,6 +26,10 @@ export type ReportZaloTransaction = {
     data: string //Dữ liệu giao dịch ZaloPay gọi về cho ứng dụng
     mac: string // 	Thông tin chứng thực của đơn hàng, dùng Callback Key (Key2) được cung cấp để chứng thực đơn hàng
     type: string // Loại callback => 1: Order, 2: Agreement
+}
+
+export type QueryZaloTransaction = {
+    app_trans_id: string
 }
 
 export class ZaloPayment {
@@ -75,16 +81,61 @@ export class ZaloPayment {
     }
 
     // Xác thực chữ ký
-    async verifyZaloPayment(report: ReportZaloTransaction) {
+    async verifyZaloPayment({ data, mac, type }: ReportZaloTransaction) {
 
-        return true
-        // const hmac = crypto.createHmac('sha256', callbackKey);
-        // hmac.update(report.data);
-        // const generatedMac = hmac.digest('hex');
+        const result = { return_code: 1, return_message: 'success' }
+        // try {
+        //     const computedMac = crypto.createHmac(data, this.config.key2).toString();
+        //     console.log('mac =', computedMac);
 
-        // return generatedMac === report.mac;
+        //     if (mac !== computedMac) {
+        //         result.return_code = -1;
+        //         result.return_message = 'mac not equal';
+        //     } else {
+        //         const dataJson = JSON.parse(data);
+        //         console.log("update order's status = success where app_trans_id =", dataJson['app_trans_id']);
+
+        //         result.return_code = 1;
+        //         result.return_message = 'success';
+        //     }
+        // } catch (ex) {
+        //     result.return_code = 0;
+        //     result.return_message = ex.message;
+        // }
+
+        return result
 
     }
+
+    async queryTransaction({ app_trans_id }: QueryZaloTransaction) {
+
+        const postData = {
+            app_id: this.config.app_id,
+            app_trans_id,
+        };
+        const data = `${postData.app_id}|${postData.app_trans_id}|${this.config.key1}`;
+        postData['mac'] = crypto.createHmac(data, this.config.key1).toString();
+
+        const postConfig = {
+            method: 'post',
+            url: 'https://sb-openapi.zalopay.vn/v2/query',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            data: qs.stringify(postData),
+        };
+
+        try {
+            const response = await axios(postConfig);
+            return response.data as {
+                return_code: number
+            };
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
 
 }
 

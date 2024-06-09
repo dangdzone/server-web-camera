@@ -1,6 +1,7 @@
 import axios from "axios";
 import * as crypto from 'crypto';
 import moment from "moment";
+import * as qs from 'qs';
 export class ZaloPayment {
     config = {
         app_id: 2554,
@@ -40,8 +41,32 @@ export class ZaloPayment {
             throw new Error(`Failed to create order: ${error.message}`);
         }
     }
-    async verifyZaloPayment(report) {
-        return true;
+    async verifyZaloPayment({ data, mac, type }) {
+        const result = { return_code: 1, return_message: 'success' };
+        return result;
+    }
+    async queryTransaction({ app_trans_id }) {
+        const postData = {
+            app_id: this.config.app_id,
+            app_trans_id,
+        };
+        const data = `${postData.app_id}|${postData.app_trans_id}|${this.config.key1}`;
+        postData['mac'] = crypto.createHmac(data, this.config.key1).toString();
+        const postConfig = {
+            method: 'post',
+            url: 'https://sb-openapi.zalopay.vn/v2/query',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            data: qs.stringify(postData),
+        };
+        try {
+            const response = await axios(postConfig);
+            return response.data;
+        }
+        catch (error) {
+            throw error;
+        }
     }
 }
 //# sourceMappingURL=ZaloPayment.js.map

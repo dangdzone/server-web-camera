@@ -19,8 +19,17 @@ export type ReportZaloTransaction = {
     mac: string;
     type: string;
 };
+export type QueryZaloTransaction = {
+    app_trans_id: string;
+};
 export declare class ZaloPayment {
     private readonly config;
     createOrder({ orderId, amount, redirectUrl, callback_url }: CreateZaloTransaction): Promise<ResponseZaloTransaction>;
-    verifyZaloPayment(report: ReportZaloTransaction): Promise<boolean>;
+    verifyZaloPayment({ data, mac, type }: ReportZaloTransaction): Promise<{
+        return_code: number;
+        return_message: string;
+    }>;
+    queryTransaction({ app_trans_id }: QueryZaloTransaction): Promise<{
+        return_code: number;
+    }>;
 }

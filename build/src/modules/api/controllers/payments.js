@@ -110,25 +110,29 @@ let PaymentController = class PaymentController {
         }
     }
     async zalo_confirm_payment(body) {
-        const data = JSON.parse(body.data);
-        if (data.return_code == 1) {
-            const zalo = new ZaloPayment;
-            if (await zalo.verifyZaloPayment(body)) {
-                await this.OrderCollection.updateOne({ _id: new ObjectId(data.app_user) }, { $set: { status: 'paid' } });
+        try {
+            const zalopay = new ZaloPayment;
+            const verify = await zalopay.verifyZaloPayment(body);
+            if (verify.return_code == 1) {
+                const data = JSON.parse(body.data);
+                const order = await zalopay.queryTransaction(data.app_trans_id);
+                if (order.return_code == 1) {
+                    await this.OrderCollection.updateOne({ _id: new ObjectId(data.item.orderId) }, { $set: { status: 'paid' } });
+                }
             }
             else {
                 throw new Error('Xác thực thất bại');
             }
         }
-        else {
-            throw new Error('Lỗi ! Thanh toán thất bại');
+        catch (error) {
+            throw new Error('Lỗi ! Vui lòng thử lại.');
         }
     }
     async pay_9_confirm_payment(body) {
         const ninepay = new NinePayment;
         const info_pay = await ninepay.verifyNinePayment(body);
         const orderId = JSON.parse(info_pay.decodedResult);
-        if (orderId.status == 2) {
+        if (orderId.status == 5) {
             if (info_pay.isValidChecksum) {
                 await this.OrderCollection.updateOne({ _id: new ObjectId(orderId.invoice_no) }, { $set: { status: 'paid' } });
                 return {
@@ -138,9 +142,6 @@ let PaymentController = class PaymentController {
             else {
                 throw new Error('Xác thực thất bại');
             }
-        }
-        else {
-            throw new Error('Lỗi ! Thanh toán thất bại');
         }
     }
 };
