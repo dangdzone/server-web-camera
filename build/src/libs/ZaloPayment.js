@@ -42,7 +42,8 @@ export class ZaloPayment {
         }
     }
     async verifyZaloPayment({ data, mac, type }) {
-        return true;
+        const result = { return_code: 1, return_message: 'success' };
+        return result;
     }
     async queryTransaction({ app_trans_id }) {
         const postData = {
