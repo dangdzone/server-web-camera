@@ -108,11 +108,10 @@ let PaymentController = class PaymentController {
     }
     async zalo_confirm_payment(body) {
         const data = JSON.parse(body.data);
-        const data_result = JSON.parse(data);
         const zalo = new ZaloPayment;
         const veryfy = await zalo.verifyZaloPayment(body);
         if (veryfy.return_code == 1) {
-            await this.OrderCollection.updateOne({ _id: new ObjectId(data_result.app_user) }, { $set: { status: 'paid' } });
+            await this.OrderCollection.updateOne({ _id: new ObjectId(data.app_user) }, { $set: { status: 'paid' } });
         }
     }
     async pay_9_confirm_payment(body) {

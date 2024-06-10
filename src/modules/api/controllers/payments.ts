@@ -129,17 +129,16 @@ export class PaymentController {
         @Body() body: ReportZaloTransaction
     ) {
 
-        // console.log(JSON.stringify(body, null, 2))
         const data = JSON.parse(body.data)
-        const data_result = JSON.parse(data)
-        // console.log({data})
+        // const data_item = JSON.parse(data.item)
+
         const zalo = new ZaloPayment
         const veryfy = await zalo.verifyZaloPayment(body)
 
         if (veryfy.return_code == 1) {
 
             await this.OrderCollection.updateOne(
-                { _id: new ObjectId(data_result.app_user) },
+                { _id: new ObjectId(data.app_user) },
                 { $set: { status: 'paid' } }
             )
         }
