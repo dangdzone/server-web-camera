@@ -83,7 +83,7 @@ export class ZaloPayment {
     // Xác thực chữ ký
     async verifyZaloPayment({ data, mac, type }: ReportZaloTransaction) {
 
-        const result = { return_code: 1, return_message: 'success' }
+        // const result = { return_code: 1, return_message: 'success' }
         // try {
         //     const computedMac = crypto.createHmac(data, this.config.key2).toString();
         //     console.log('mac =', computedMac);
@@ -103,7 +103,7 @@ export class ZaloPayment {
         //     result.return_message = ex.message;
         // }
 
-        return result
+        return true
 
     }
 

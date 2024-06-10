@@ -25,10 +25,7 @@ export type QueryZaloTransaction = {
 export declare class ZaloPayment {
     private readonly config;
     createOrder({ orderId, amount, redirectUrl, callback_url }: CreateZaloTransaction): Promise<ResponseZaloTransaction>;
-    verifyZaloPayment({ data, mac, type }: ReportZaloTransaction): Promise<{
-        return_code: number;
-        return_message: string;
-    }>;
+    verifyZaloPayment({ data, mac, type }: ReportZaloTransaction): Promise<boolean>;
     queryTransaction({ app_trans_id }: QueryZaloTransaction): Promise<{
         return_code: number;
     }>;

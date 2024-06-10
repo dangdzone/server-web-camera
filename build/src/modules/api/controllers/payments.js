@@ -58,7 +58,7 @@ let PaymentController = class PaymentController {
                 const responseZaloTransaction = await zalopay.createOrder({
                     orderId: order.id.toString(),
                     amount: order.pay,
-                    redirectUrl: `https://flygo.dangdzone.site/member/histories/${order_id}`,
+                    redirectUrl: `https://shop.dangdzone.site/member/histories/${order_id}`,
                     callback_url: 'https://api.dangdzone.site/livequery/webhooks/zalo/~report',
                 });
                 return {
@@ -105,27 +105,12 @@ let PaymentController = class PaymentController {
                 throw new Error('Xác thực thất bại');
             }
         }
-        else {
-            throw new Error('Lỗi ! Thanh toán thất bại');
-        }
     }
     async zalo_confirm_payment(body) {
-        try {
-            const zalopay = new ZaloPayment;
-            const verify = await zalopay.verifyZaloPayment(body);
-            if (verify.return_code == 1) {
-                const data = JSON.parse(body.data);
-                const order = await zalopay.queryTransaction(data.app_trans_id);
-                if (order.return_code == 1) {
-                    await this.OrderCollection.updateOne({ _id: new ObjectId(data.item.orderId) }, { $set: { status: 'paid' } });
-                }
-            }
-            else {
-                throw new Error('Xác thực thất bại');
-            }
-        }
-        catch (error) {
-            throw new Error('Lỗi ! Vui lòng thử lại.');
+        const data = JSON.parse(body.data);
+        const zalo = new ZaloPayment;
+        if (await zalo.verifyZaloPayment(body)) {
+            await this.OrderCollection.updateOne({ _id: new ObjectId(data.item.orderId) }, { $set: { status: 'paid' } });
         }
     }
     async pay_9_confirm_payment(body) {

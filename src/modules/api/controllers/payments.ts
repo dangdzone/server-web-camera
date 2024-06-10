@@ -63,7 +63,7 @@ export class PaymentController {
                 const responseZaloTransaction = await zalopay.createOrder({
                     orderId: order.id.toString(),
                     amount: order.pay,
-                    redirectUrl: `https://flygo.dangdzone.site/member/histories/${order_id}`,
+                    redirectUrl: `https://shop.dangdzone.site/member/histories/${order_id}`,
                     callback_url: 'https://api.dangdzone.site/livequery/webhooks/zalo/~report',
                 })
                 // console.log(JSON.stringify(responseZaloTransaction, null, 2))
@@ -120,9 +120,7 @@ export class PaymentController {
             } else {
                 throw new Error('Xác thực thất bại')
             }
-        } else {
-            throw new Error('Lỗi ! Thanh toán thất bại')
-        }
+        } 
 
     }
 
@@ -131,38 +129,41 @@ export class PaymentController {
         @Body() body: ReportZaloTransaction
     ) {
 
-        try {
-            const zalopay = new ZaloPayment
-            const verify = await zalopay.verifyZaloPayment(body)
-            if (verify.return_code == 1) {
+        // console.log(JSON.stringify(body, null, 2))
+        const data = JSON.parse(body.data)
+        // console.log({data})
 
-                const data = JSON.parse(body.data)
-                const order = await zalopay.queryTransaction(data.app_trans_id)
+        const zalo = new ZaloPayment
+        if (await zalo.verifyZaloPayment(body)) {
 
-                if (order.return_code == 1) {
-                    await this.OrderCollection.updateOne(
-                        { _id: new ObjectId(data.item.orderId) },
-                        { $set: { status: 'paid' } }
-                    )
-                }
-            } else {
-                throw new Error('Xác thực thất bại')
-            }
-        } catch (error) {
-            throw new Error('Lỗi ! Vui lòng thử lại.')
+            await this.OrderCollection.updateOne(
+                { _id: new ObjectId(data.item.orderId) },
+                { $set: { status: 'paid' } }
+            )
         }
+        // try {
+        //     const zalopay = new ZaloPayment
+        //     const verify = await zalopay.verifyZaloPayment(body)
+        //     if (verify.return_code == 1) {
+
+        //         const data = JSON.parse(body.data)
+        //         const order = await zalopay.queryTransaction(data.app_trans_id)
+
+        //         if (order.return_code == 1) {
+        //             await this.OrderCollection.updateOne(
+        //                 { _id: new ObjectId(data.item.orderId) },
+        //                 { $set: { status: 'paid' } }
+        //             )
+        //         }
+        //     } else {
+        //         throw new Error('Xác thực thất bại')
+        //     }
+        // } catch (error) {
+        //     throw new Error('Lỗi ! Vui lòng thử lại.')
+        // }
 
         // console.log(JSON.stringify(body, null, 2))
-        // const data = JSON.parse(body.data)
-
-        // const zalo = new ZaloPayment
-        // if (await zalo.verifyZaloPayment(body)) {
-        //     console.log('1')
-        //     await this.OrderCollection.updateOne(
-        //         { _id: new ObjectId(data.item.orderId) },
-        //         { $set: { status: 'paid' } }
-        //     )
-        // }
+        
 
     }
 
