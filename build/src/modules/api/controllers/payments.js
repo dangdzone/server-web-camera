@@ -58,7 +58,7 @@ let PaymentController = class PaymentController {
                 const responseZaloTransaction = await zalopay.createOrder({
                     orderId: order.id.toString(),
                     amount: order.pay,
-                    redirectUrl: `https://shop.dangdzone.site/member/histories/${order_id}`,
+                    redirectUrl: `https://flygo.dangdzone.site/member/histories/${order_id}`,
                     callback_url: 'https://api.dangdzone.site/livequery/webhooks/zalo/~report',
                 });
                 return {
