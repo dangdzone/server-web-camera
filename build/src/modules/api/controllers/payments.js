@@ -20,6 +20,7 @@ import { ObjectId } from 'mongodb';
 import { error } from 'console';
 import { ZaloPayment } from '../../../libs/ZaloPayment.js';
 import { NinePayment } from '../../../libs/NinePayment.js';
+import { VietQRPaymet } from '../../../libs/VietQRPayment.js';
 let PaymentController = class PaymentController {
     OrderCollection;
     constructor(OrderCollection) {
@@ -130,6 +131,14 @@ let PaymentController = class PaymentController {
             }
         }
     }
+    async vietqr_confirm_payment(body) {
+        const vietqr = new VietQRPaymet;
+        const reponse = await vietqr.responsePayment(body);
+        const order = await this.OrderCollection.findOne({ where: { code: reponse.code, pay: reponse.rice } });
+        if (order) {
+            await this.OrderCollection.updateOne({ _id: new ObjectId(order.id) }, { $set: { status: 'paid' } });
+        }
+    }
 };
 __decorate([
     Post('customers/:customer_id/orders/:id/~pay'),
@@ -162,6 +171,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], PaymentController.prototype, "pay_9_confirm_payment", null);
+__decorate([
+    Post('webhooks/vietqr/~report'),
+    __param(0, Body()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], PaymentController.prototype, "vietqr_confirm_payment", null);
 PaymentController = __decorate([
     Controller('livequery'),
     __param(0, InjectRepository(Order)),

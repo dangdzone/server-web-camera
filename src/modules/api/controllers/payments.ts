@@ -9,6 +9,8 @@ import { ObjectId } from 'mongodb';
 import { error } from 'console';
 import { ReportZaloTransaction, ZaloPayment } from '../../../libs/ZaloPayment.js';
 import { NinePayment, ReportNinePayTransaction } from '../../../libs/NinePayment.js';
+import { VietQRPaymet } from '../../../libs/VietQRPayment.js';
+
 
 @Controller('livequery') // Đơn hàng
 export class PaymentController {
@@ -120,7 +122,7 @@ export class PaymentController {
             } else {
                 throw new Error('Xác thực thất bại')
             }
-        } 
+        }
 
     }
 
@@ -164,7 +166,7 @@ export class PaymentController {
         // }
 
         // console.log(JSON.stringify(body, null, 2))
-        
+
 
     }
 
@@ -195,16 +197,26 @@ export class PaymentController {
         }
 
     }
+
+    @Post('webhooks/vietqr/~report')
+    async vietqr_confirm_payment(
+        @Body() body,
+    ) {
+
+        const vietqr = new VietQRPaymet
+        const reponse = await vietqr.responsePayment(body)
+
+        // Tìm đơn hàng có mã code, pay == body..... gửi về
+        const order = await this.OrderCollection.findOne(
+            { where: { code: reponse.code, pay: reponse.rice } }
+        )
+
+        if (order) {
+            await this.OrderCollection.updateOne(
+                { _id: new ObjectId(order.id) },
+                { $set: { status: 'paid' } }
+            )
+        }
+
+    }
 }
-
-// @Controller('https://sb-openapi.zalopay.vn/v2/query')
-// export class ZaloPaymentController {
-
-//     constructor(
-//         @InjectRepository(Order) private OrderCollection: MongoRepository<Order>,
-//     ) { }
-
-//     @Post()
-
-
-// }
