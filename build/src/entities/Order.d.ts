@@ -18,13 +18,6 @@ export declare class Order extends BaseEntity {
         email: string;
         img: string;
     };
-    receiver_info: {
-        receiver_name: string;
-        receiver_phone: number;
-        province: number | string;
-        district: number;
-        ward: number | string;
-        street: number | string;
-        note: string;
-    };
+    address_id: string;
+    note: string;
 }

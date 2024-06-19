@@ -15,6 +15,7 @@ import { StoreController } from "./controllers/stores.js";
 import { CartController } from "./controllers/carts.js";
 import { OrderController } from "./controllers/orders.js";
 import { PaymentController } from "./controllers/payments.js";
+import { AddressController } from "./controllers/addresses.js";
 
 @Module({
     imports: [TypeormConfigModule],
@@ -26,7 +27,8 @@ import { PaymentController } from "./controllers/payments.js";
         StoreController,
         CartController,
         OrderController,
-        PaymentController
+        PaymentController,
+        AddressController
     ],
     providers: [
         LivequeryInterceptor,

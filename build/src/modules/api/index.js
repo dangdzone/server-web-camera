@@ -20,6 +20,7 @@ import { StoreController } from "./controllers/stores.js";
 import { CartController } from "./controllers/carts.js";
 import { OrderController } from "./controllers/orders.js";
 import { PaymentController } from "./controllers/payments.js";
+import { AddressController } from "./controllers/addresses.js";
 let ApiModule = class ApiModule {
 };
 ApiModule = __decorate([
@@ -33,7 +34,8 @@ ApiModule = __decorate([
             StoreController,
             CartController,
             OrderController,
-            PaymentController
+            PaymentController,
+            AddressController
         ],
         providers: [
             LivequeryInterceptor,
