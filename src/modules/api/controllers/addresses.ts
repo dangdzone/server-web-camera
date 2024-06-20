@@ -5,9 +5,7 @@ import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Logged, WhoCanDoThat } from '../guards/Auth.js';
 import { Address } from '../../../entities/Address.js';
-import { LivequeryResponse } from '@livequery/nestjs';
 import { ObjectId } from 'mongodb';
-
 
 @Controller('livequery/customers/:customer_id/addresses') // Thương hiệu
 export class AddressController {
@@ -24,19 +22,19 @@ export class AddressController {
 
     @Post()
     @WhoCanDoThat(Logged)
-    @UseTypeormDatasource({ entity: Address, realtime: true })
+    // @UseTypeormDatasource({ entity: Address, realtime: true })
     async create(
         @Body() body: Address,
-        @LivequeryResponse() res: { item: { id: ObjectId } }
+        // @LivequeryResponse() res: { item: { id: ObjectId } }
     ) {
 
         // id address vừa tạo
-        const address_id = res.item.id.toString()
+        // const address_id = res.item.id.toString()
 
         if (body.default == true) {
             await this.AddressCollection.updateMany({}, { $set: { default: false } })
-            return await this.AddressCollection.updateOne(
-                { _id: new ObjectId(address_id) }, { $set: { default: true } }
+            this.AddressCollection.save(
+                { ...new Address(), ...body }
             )
         }
 
@@ -45,10 +43,15 @@ export class AddressController {
             const addressAll = await this.AddressCollection.find()
             const defaultList = addressAll.map(a => a.default).includes(true)
 
-            !defaultList && await this.AddressCollection.updateOne(
-                { _id: new ObjectId(address_id) }, { $set: { default: true } }
-            )
-
+            if (defaultList) {
+                this.AddressCollection.save(
+                    { ...new Address(), ...body }
+                )
+            } else {
+                this.AddressCollection.save(
+                    { ...new Address(), ...body, default: true }
+                )
+            }
         }
     }
 
@@ -61,10 +64,12 @@ export class AddressController {
     ) {
 
         if (body.default == true) {
+            
             await this.AddressCollection.updateMany({}, { $set: { default: false } })
             return await this.AddressCollection.updateOne(
                 { _id: new ObjectId(address_id) }, { $set: { default: true } }
             )
+            
         }
 
         if (body.default == false) {
@@ -116,8 +121,6 @@ export class AddressController {
                     { _id: new ObjectId(address_id) }
                 )
             }
-
-
         }
 
     }
