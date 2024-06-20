@@ -10,21 +10,60 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { UseTypeormDatasource } from '../decoraters/UseTypeormDatasource.js';
 import { Logged, WhoCanDoThat } from '../guards/Auth.js';
 import { Address } from '../../../entities/Address.js';
+import { LivequeryResponse } from '@livequery/nestjs';
+import { ObjectId } from 'mongodb';
 let AddressController = class AddressController {
     AddressCollection;
     constructor(AddressCollection) {
         this.AddressCollection = AddressCollection;
     }
     async list() { }
-    async create() { }
-    async patch() { }
-    async del() { }
+    async create(body, res) {
+        const address_id = res.item.id.toString();
+        if (body.default == true) {
+            await this.AddressCollection.updateMany({}, { $set: { default: false } });
+            return await this.AddressCollection.updateOne({ _id: new ObjectId(address_id) }, { $set: { default: true } });
+        }
+        if (body.default == false) {
+            const addressAll = await this.AddressCollection.find();
+            const defaultList = addressAll.map(a => a.default).includes(true);
+            !defaultList && await this.AddressCollection.updateOne({ _id: new ObjectId(address_id) }, { $set: { default: true } });
+        }
+    }
+    async patch(body, address_id) {
+        if (body.default == true) {
+            await this.AddressCollection.updateMany({}, { $set: { default: false } });
+            return await this.AddressCollection.updateOne({ _id: new ObjectId(address_id) }, { $set: { default: true } });
+        }
+        if (body.default == false) {
+            const addressAll = await this.AddressCollection.find();
+            const defaultList = addressAll.map(a => a.default).includes(true);
+            !defaultList && await this.AddressCollection.updateOne({ _id: new ObjectId(address_id) }, { $set: { default: true } });
+        }
+    }
+    async del(address_id) {
+        const address = await this.AddressCollection.findOne({ where: { _id: new ObjectId(address_id) } });
+        const addressDefault = address.default;
+        !addressDefault && await this.AddressCollection.deleteOne({ _id: new ObjectId(address_id) });
+        if (addressDefault) {
+            const addressAll = await this.AddressCollection.find();
+            if (addressAll.length > 1) {
+                const addressOne = addressAll.filter(address => address.id.toString() !== address_id);
+                const addressId = addressOne[0].id.toString();
+                const update = await this.AddressCollection.updateOne({ _id: new ObjectId(addressId) }, { $set: { default: true } });
+                update && await this.AddressCollection.deleteOne({ _id: new ObjectId(address_id) });
+            }
+            else {
+                await this.AddressCollection.deleteOne({ _id: new ObjectId(address_id) });
+            }
+        }
+    }
 };
 __decorate([
     Get(['', ':id']),
@@ -37,23 +76,27 @@ __decorate([
     Post(),
     WhoCanDoThat(Logged),
     UseTypeormDatasource({ entity: Address, realtime: true }),
+    __param(0, Body()),
+    __param(1, LivequeryResponse()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Address, Object]),
     __metadata("design:returntype", Promise)
 ], AddressController.prototype, "create", null);
 __decorate([
     Patch(':id'),
     WhoCanDoThat(Logged),
     UseTypeormDatasource({ entity: Address, realtime: true }),
+    __param(0, Body()),
+    __param(1, Param('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Address, String]),
     __metadata("design:returntype", Promise)
 ], AddressController.prototype, "patch", null);
 __decorate([
     Delete(':id'),
-    UseTypeormDatasource({ entity: Address, realtime: true }),
+    __param(0, Param('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], AddressController.prototype, "del", null);
 AddressController = __decorate([

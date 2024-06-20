@@ -1,3 +1,13 @@
+export declare class Address extends BaseEntity {
+    customer_id: string;
+    name: string;
+    phone: string;
+    province: number | string;
+    district: number;
+    ward: number | string;
+    street: number | string;
+    default: boolean;
+}
 export type PermissionList = string;
 export type UserPermissions = {
     [user_uid: string]: PermissionList;
@@ -45,15 +55,8 @@ export declare class Order extends BaseEntity {
         email: string;
         img: string;
     };
-    receiver_info: {
-        receiver_name: string;
-        receiver_phone: number;
-        province: number | string;
-        district: number;
-        ward: number | string;
-        street: number | string;
-        note: string;
-    };
+    address_id: string;
+    note: string;
 }
 export declare class Product extends BaseEntity {
     name: string;
