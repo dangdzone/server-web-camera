@@ -19,7 +19,6 @@ export class PaymentController {
         @InjectRepository(Order) private OrderCollection: MongoRepository<Order>,
     ) { }
 
-
     @Post('customers/:customer_id/orders/:id/~pay')
     @WhoCanDoThat(Logged, ctx => ctx.req.params.uid == ctx.req.user.uid)
     async create(
@@ -66,7 +65,7 @@ export class PaymentController {
                     orderId: order.id.toString(),
                     amount: order.pay,
                     redirectUrl: `https://flygo.dangdzone.site/member/histories/${order_id}`,
-                    callback_url: 'https://api.dangdzone.site/livequery/webhooks/zalo/~report',
+                    callback_url: 'https://api.dangdzone.site/livequery/webhooks/zalo/~report'
                 })
                 // console.log(JSON.stringify(responseZaloTransaction, null, 2))
                 return {
@@ -88,7 +87,7 @@ export class PaymentController {
                     amount: order.pay,
                     description: order.id.toString(),
                     invoice_no: order.id.toString(),
-                    return_url: `https://api.dangdzone.site/livequery/webhooks/9pay/~report`,
+                    return_url: `https://api.dangdzone.site/livequery/webhooks/9pay/~report`
                 })
                 // console.log(JSON.stringify(responseNineTransaction, null, 2))
                 return {
@@ -110,8 +109,7 @@ export class PaymentController {
         // @Param('type') type: string
     ) {
 
-        // console.log(JSON.stringify(body, null, 2))
-
+        // Thành công
         if (body.resultCode == 0) {
             const momo = new MomoPayment
             if (await momo.verifyMomoPayment(body)) {
@@ -124,6 +122,15 @@ export class PaymentController {
             }
         }
 
+        // Giao dịch thất bại
+        if(body.resultCode == 1003) {
+            await this.OrderCollection.updateOne(
+                { _id: new ObjectId(body.orderId) },
+                { $set: { status: 'cancel' } }
+            )
+
+        }
+
     }
 
     @Post('webhooks/zalo/~report')
@@ -132,17 +139,26 @@ export class PaymentController {
     ) {
 
         const data = JSON.parse(body.data)
-        // const data_item = JSON.parse(data.item)
-
         const zalo = new ZaloPayment
         const veryfy = await zalo.verifyZaloPayment(body)
 
+        // Thành công
         if (veryfy.return_code == 1) {
 
             await this.OrderCollection.updateOne(
                 { _id: new ObjectId(data.app_user) },
                 { $set: { status: 'paid' } }
             )
+        }
+
+        // 	Thất bại
+        if (veryfy.return_code == 2) {
+
+            await this.OrderCollection.updateOne(
+                { _id: new ObjectId(data.app_user) },
+                { $set: { status: 'cancel' } }
+            )
+
         }
         // try {
         //     const zalopay = new ZaloPayment
@@ -178,10 +194,13 @@ export class PaymentController {
 
         const ninepay = new NinePayment
         const info_pay = await ninepay.verifyNinePayment(body)
-        const orderId = JSON.parse(info_pay.decodedResult)
+        const orderId = this.cleanAndParseJSON(info_pay.decodedResult)
 
+        // Giao dịch thành công và merchant đã được cộng số dư
         if (orderId.status == 5) {
+
             if (info_pay.isValidChecksum) {
+
                 await this.OrderCollection.updateOne(
                     { _id: new ObjectId(orderId.invoice_no) },
                     { $set: { status: 'paid' } }
@@ -196,6 +215,40 @@ export class PaymentController {
 
         }
 
+        // Giao dịch bị hủy do khách hàng
+        if (orderId.status == 8) {
+            console.log('Giao dịch bị hủy')
+            return {
+                url: `https://flygo.dangdzone.site/member/histories/${orderId.invoice_no}`
+            }
+        }
+
+        // Giao dịch thất bại
+        if (orderId.status == 6) {
+
+            await this.OrderCollection.updateOne(
+                { _id: new ObjectId(orderId.invoice_no) },
+                { $set: { status: 'cancel' } }
+            )
+            return {
+                url: `https://flygo.dangdzone.site/member/histories/${orderId.invoice_no}`
+            }
+        }
+
+    }
+
+    // Loại bỏ `...` => '...'
+    private cleanAndParseJSON(jsonString: string): any {
+        try {
+            // Loại bỏ các ký tự điều khiển không hợp lệ
+            const cleanedString = jsonString.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+            // Phân tích cú pháp chuỗi JSON
+            const parsedResult = JSON.parse(cleanedString);
+            return parsedResult;
+        } catch (error) {
+            console.error('Failed to parse decodedResult:', error);
+            return null;
+        }
     }
 
     @Post('webhooks/vietqr/~report')

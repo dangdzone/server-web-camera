@@ -60,7 +60,7 @@ let PaymentController = class PaymentController {
                     orderId: order.id.toString(),
                     amount: order.pay,
                     redirectUrl: `https://flygo.dangdzone.site/member/histories/${order_id}`,
-                    callback_url: 'https://api.dangdzone.site/livequery/webhooks/zalo/~report',
+                    callback_url: 'https://api.dangdzone.site/livequery/webhooks/zalo/~report'
                 });
                 return {
                     data: {
@@ -81,7 +81,7 @@ let PaymentController = class PaymentController {
                     amount: order.pay,
                     description: order.id.toString(),
                     invoice_no: order.id.toString(),
-                    return_url: `https://api.dangdzone.site/livequery/webhooks/9pay/~report`,
+                    return_url: `https://api.dangdzone.site/livequery/webhooks/9pay/~report`
                 });
                 return {
                     data: {
@@ -106,6 +106,9 @@ let PaymentController = class PaymentController {
                 throw new Error('Xác thực thất bại');
             }
         }
+        if (body.resultCode == 1003) {
+            await this.OrderCollection.updateOne({ _id: new ObjectId(body.orderId) }, { $set: { status: 'cancel' } });
+        }
     }
     async zalo_confirm_payment(body) {
         const data = JSON.parse(body.data);
@@ -114,11 +117,14 @@ let PaymentController = class PaymentController {
         if (veryfy.return_code == 1) {
             await this.OrderCollection.updateOne({ _id: new ObjectId(data.app_user) }, { $set: { status: 'paid' } });
         }
+        if (veryfy.return_code == 2) {
+            await this.OrderCollection.updateOne({ _id: new ObjectId(data.app_user) }, { $set: { status: 'cancel' } });
+        }
     }
     async pay_9_confirm_payment(body) {
         const ninepay = new NinePayment;
         const info_pay = await ninepay.verifyNinePayment(body);
-        const orderId = JSON.parse(info_pay.decodedResult);
+        const orderId = this.cleanAndParseJSON(info_pay.decodedResult);
         if (orderId.status == 5) {
             if (info_pay.isValidChecksum) {
                 await this.OrderCollection.updateOne({ _id: new ObjectId(orderId.invoice_no) }, { $set: { status: 'paid' } });
@@ -129,6 +135,29 @@ let PaymentController = class PaymentController {
             else {
                 throw new Error('Xác thực thất bại');
             }
+        }
+        if (orderId.status == 8) {
+            console.log('Giao dịch bị hủy');
+            return {
+                url: `https://flygo.dangdzone.site/member/histories/${orderId.invoice_no}`
+            };
+        }
+        if (orderId.status == 6) {
+            await this.OrderCollection.updateOne({ _id: new ObjectId(orderId.invoice_no) }, { $set: { status: 'cancel' } });
+            return {
+                url: `https://flygo.dangdzone.site/member/histories/${orderId.invoice_no}`
+            };
+        }
+    }
+    cleanAndParseJSON(jsonString) {
+        try {
+            const cleanedString = jsonString.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+            const parsedResult = JSON.parse(cleanedString);
+            return parsedResult;
+        }
+        catch (error) {
+            console.error('Failed to parse decodedResult:', error);
+            return null;
         }
     }
     async vietqr_confirm_payment(body) {

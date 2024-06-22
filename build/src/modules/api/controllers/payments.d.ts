@@ -18,5 +18,6 @@ export declare class PaymentController {
     pay_9_confirm_payment(body: ReportNinePayTransaction): Promise<{
         url: string;
     }>;
+    private cleanAndParseJSON;
     vietqr_confirm_payment(body: any): Promise<void>;
 }
