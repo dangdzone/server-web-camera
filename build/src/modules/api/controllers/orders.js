@@ -64,7 +64,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], OrderController.prototype, "patch", null);
 __decorate([
-    Delete(':id'),
+    Delete('orders/:id'),
     UseTypeormDatasource({ entity: Order, realtime: true }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),

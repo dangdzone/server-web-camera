@@ -40,7 +40,7 @@ export class OrderController {
     @UseTypeormDatasource({ entity: Order, realtime: true })
     async patch() { }
 
-    @Delete(':id')
+    @Delete('orders/:id')
     @UseTypeormDatasource({ entity: Order, realtime: true })
     async del() { }
 

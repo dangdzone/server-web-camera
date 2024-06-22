@@ -7,6 +7,8 @@ export class VietQRPaymet {
             const code = codeIdMatch ? codeIdMatch[1] : null;
             return { rice, code };
         }
+        if (body.pkg == 'com.TCB') {
+        }
     }
 }
 //# sourceMappingURL=VietQRPayment.js.map

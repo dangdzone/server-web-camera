@@ -13,6 +13,10 @@ export class VietQRPaymet {
 
             return { rice, code }
         }
+
+        if(body.pkg == 'com.TCB') {
+
+        }
         
     }
 
