@@ -32,15 +32,15 @@ export class AddressController {
         // const address_id = res.item.id.toString()
 
         if (body.default == true) {
-            await this.AddressCollection.updateMany({}, { $set: { default: false } })
-            this.AddressCollection.save(
+            await this.AddressCollection.updateMany({ customer_id: body.customer_id }, { $set: { default: false } })
+            await this.AddressCollection.save(
                 { ...new Address(), ...body }
             )
         }
 
         if (body.default == false) {
 
-            const addressAll = await this.AddressCollection.find()
+            const addressAll = await this.AddressCollection.find({ customer_id: body.customer_id })
             const defaultList = addressAll.map(a => a.default).includes(true)
 
             if (defaultList) {
@@ -64,17 +64,17 @@ export class AddressController {
     ) {
 
         if (body.default == true) {
-            
-            await this.AddressCollection.updateMany({}, { $set: { default: false } })
+
+            await this.AddressCollection.updateMany({ customer_id: body.customer_id }, { $set: { default: false } })
             return await this.AddressCollection.updateOne(
                 { _id: new ObjectId(address_id) }, { $set: { default: true } }
             )
-            
+
         }
 
         if (body.default == false) {
 
-            const addressAll = await this.AddressCollection.find()
+            const addressAll = await this.AddressCollection.find({ customer_id: body.customer_id })
             const defaultList = addressAll.map(a => a.default).includes(true)
 
             !defaultList && await this.AddressCollection.updateOne(
@@ -102,7 +102,7 @@ export class AddressController {
 
         if (addressDefault) {
 
-            const addressAll = await this.AddressCollection.find()
+            const addressAll = await this.AddressCollection.find({ customer_id: address.customer_id })
 
             if (addressAll.length > 1) {
 

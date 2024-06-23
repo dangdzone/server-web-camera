@@ -25,11 +25,11 @@ let AddressController = class AddressController {
     async list() { }
     async create(body) {
         if (body.default == true) {
-            await this.AddressCollection.updateMany({}, { $set: { default: false } });
-            this.AddressCollection.save({ ...new Address(), ...body });
+            await this.AddressCollection.updateMany({ customer_id: body.customer_id }, { $set: { default: false } });
+            await this.AddressCollection.save({ ...new Address(), ...body });
         }
         if (body.default == false) {
-            const addressAll = await this.AddressCollection.find();
+            const addressAll = await this.AddressCollection.find({ customer_id: body.customer_id });
             const defaultList = addressAll.map(a => a.default).includes(true);
             if (defaultList) {
                 await this.AddressCollection.save({ ...new Address(), ...body });
@@ -41,11 +41,11 @@ let AddressController = class AddressController {
     }
     async patch(body, address_id) {
         if (body.default == true) {
-            await this.AddressCollection.updateMany({}, { $set: { default: false } });
+            await this.AddressCollection.updateMany({ customer_id: body.customer_id }, { $set: { default: false } });
             return await this.AddressCollection.updateOne({ _id: new ObjectId(address_id) }, { $set: { default: true } });
         }
         if (body.default == false) {
-            const addressAll = await this.AddressCollection.find();
+            const addressAll = await this.AddressCollection.find({ customer_id: body.customer_id });
             const defaultList = addressAll.map(a => a.default).includes(true);
             !defaultList && await this.AddressCollection.updateOne({ _id: new ObjectId(address_id) }, { $set: { default: true } });
         }
@@ -55,7 +55,7 @@ let AddressController = class AddressController {
         const addressDefault = address.default;
         !addressDefault && await this.AddressCollection.deleteOne({ _id: new ObjectId(address_id) });
         if (addressDefault) {
-            const addressAll = await this.AddressCollection.find();
+            const addressAll = await this.AddressCollection.find({ customer_id: address.customer_id });
             if (addressAll.length > 1) {
                 const addressOne = addressAll.filter(address => address.id.toString() !== address_id);
                 const addressId = addressOne[0].id.toString();
