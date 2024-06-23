@@ -44,11 +44,11 @@ export class AddressController {
             const defaultList = addressAll.map(a => a.default).includes(true)
 
             if (defaultList) {
-                this.AddressCollection.save(
+                await this.AddressCollection.save(
                     { ...new Address(), ...body }
                 )
             } else {
-                this.AddressCollection.save(
+                await this.AddressCollection.save(
                     { ...new Address(), ...body, default: true }
                 )
             }

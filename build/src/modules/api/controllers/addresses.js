@@ -32,10 +32,10 @@ let AddressController = class AddressController {
             const addressAll = await this.AddressCollection.find();
             const defaultList = addressAll.map(a => a.default).includes(true);
             if (defaultList) {
-                this.AddressCollection.save({ ...new Address(), ...body });
+                await this.AddressCollection.save({ ...new Address(), ...body });
             }
             else {
-                this.AddressCollection.save({ ...new Address(), ...body, default: true });
+                await this.AddressCollection.save({ ...new Address(), ...body, default: true });
             }
         }
     }
