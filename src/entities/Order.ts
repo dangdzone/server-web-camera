@@ -15,6 +15,11 @@ export class Order extends BaseEntity {
         product_id: string
         amount: number
         select: boolean
+        image: string
+        name: string,
+        code: string
+        advertising_price: number // Giá quảng cáo
+        total_price: number
     }>
 
     @Column()
