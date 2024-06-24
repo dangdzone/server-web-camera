@@ -43,6 +43,11 @@ export declare class Order extends BaseEntity {
         product_id: string;
         amount: number;
         select: boolean;
+        image: string;
+        name: string;
+        code: string;
+        advertising_price: number;
+        total_price: number;
     }>;
     amount: number;
     total: number;
